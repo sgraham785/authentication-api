@@ -28,6 +28,6 @@ exports.up = function (trx, Promise) {
 exports.down = function(trx, Promise) {
   console.log('Dropping tables')
   return trx.schema
-    .dropTable('users')
-    .dropTable('todos');
+    .dropTable('todos')
+    .dropTable('users');
 };
