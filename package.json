@@ -15,7 +15,7 @@
   "bugs": {
     "url": "https://github.com/sgraham785/node-postgres-api-server/issues"
   },
-  "license" : "SEE LICENSE IN https://github.com/sgraham785/node-postgres-api-server/blob/master/LICENSE",
+  "license": "SEE LICENSE IN https://github.com/sgraham785/node-postgres-api-server/blob/master/LICENSE",
   "scripts": {
     "start": "nodemon ./bin/www"
   },
@@ -37,6 +37,7 @@
     "lodash": "^4.3.0",
     "morgan": "~1.6.1",
     "nodemailer": "^2.1.0",
+    "nunjucks": "^2.3.0",
     "pg": "^4.3.0",
     "pg-promise": "~3.1.7",
     "pg-query-stream": "^1.0.0",

@@ -5,6 +5,7 @@ var logger = require('morgan');
 var bodyParser = require('body-parser');
 var fs = require('fs');
 var cors = require('cors');
+var nunjucks = require('nunjucks');
 
 var dotenv = require('dotenv');
 var envFile = path.join(__dirname, '..', '.env');
@@ -17,6 +18,11 @@ var app = express();
 if (fs.existsSync(envFile)){
     dotenv.load();
 }
+
+nunjucks.configure('views', {
+    autoescape: true,
+    express: app
+});
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
