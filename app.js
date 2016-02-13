@@ -4,6 +4,7 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var bodyParser = require('body-parser');
 var fs = require('fs');
+var cors = require('cors');
 
 var dotenv = require('dotenv');
 var envFile = path.join(__dirname, '..', '.env');
@@ -28,13 +29,17 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Define CORS
+var corsOptions = {
+  origins: '*', // restrict it to the required domain
+  methods: 'GET,PUT,POST,DELETE,OPTIONS',
+  allowedHeaders: 'Content-type,Accept,X-Access-Token,X-Key',
+  maxAge: 3600
+}
+// Enable ALL CORS for requests
+app.use(cors(corsOptions));
+
+// Fix res for OPTIONS CORS
 app.all('/*', function(req, res, next) {
-    // CORS headers
-    res.header("Access-Control-Allow-Origin", "*"); // restrict it to the required domain
-    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-    // Set custom headers for CORS
-    res.header('Access-Control-Allow-Headers', 'Content-type,Accept,X-Access-Token,X-Key');
     if (req.method == 'OPTIONS') {
         res.status(200).end();
     } else {
