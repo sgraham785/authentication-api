@@ -1,4 +1,4 @@
-var Bookshelf = require('../configs/db').bookshelf;
+var Bookshelf = require('../database').bookshelf;
 var Model = require('../models/Todo');
 
 var check = require('validator').check;

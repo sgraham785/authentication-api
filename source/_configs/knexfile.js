@@ -2,14 +2,15 @@ var path = require('path');
 var fs = require('fs');
 
 var dotenv = require('dotenv');
-var envFile = path.join(__dirname, '../', '.env');
+var env = path.join(__dirname, '../..', '.env');
 
 // load up .env file;
-if (fs.existsSync(envFile)){
+if (fs.existsSync(env)){
     dotenv.load();
 }
+console.log(process.env.DB_HOST);
 
-var dbConfig = {
+var dbconf = {
    client: 'pg',
    debug: true,
    connection: {
@@ -21,4 +22,4 @@ var dbConfig = {
    }
  };
 
-module.exports = dbConfig;
+module.exports = dbconf;

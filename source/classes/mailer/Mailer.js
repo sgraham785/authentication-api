@@ -1,10 +1,8 @@
-'use strict';
+var fs = require('fs');
+var path = require('path');
 
 var nodemailer = require('nodemailer');
-var transporter = require('../configs/mailer').transporter;
-
-var path = require('path');
-var fs = require('fs');
+var transporter = require('../../_configs/mailer').transporter;
 
 var templatesDir = path.resolve(__dirname, '..', 'views/mail');
 var emailTemplates = require('email-templates');
@@ -65,6 +63,6 @@ var sendOne = function (templateName, locals, fn) {
             });
         });
     });
-}
+};
 
 module.exports.sendOne = sendOne;

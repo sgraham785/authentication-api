@@ -3,10 +3,10 @@ var JWT = require('jwt-async');
 var Promise = require('bluebird');
 var Checkit = require('checkit');
 
-var Model = require('../models/User');
-var Encrypt = Promise.promisifyAll(require('../models/Encrypt'));
-var genCode = require('../models/Verify').genCode;
-var Mailer = require('../models/Mailer').sendOne;
+var Model = require('../modules/users/model');
+var Encrypt = Promise.promisifyAll(require('../classes/auth/Encrypt'));
+var genCode = require('../classes/auth/Verify').genCode;
+var Mailer = require('../classes/mailer/Mailer').sendOne;
 
 var jwt = new JWT({
     crypto: {

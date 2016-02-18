@@ -1,4 +1,4 @@
-var Bookshelf = require('../configs/db').bookshelf;
+var Bookshelf = require('../classes/database').bookshelf;
 var Todos = require('./Todo');
 var Encrypt = require('./Encrypt');
 var Promise = require('bluebird');

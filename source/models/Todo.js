@@ -1,4 +1,4 @@
-var Bookshelf = require('../configs/db').bookshelf;
+var Bookshelf = require('../classes/database').bookshelf;
 
 var Todo = Bookshelf.Model.extend({
     tableName: 'todos',

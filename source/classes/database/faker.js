@@ -1,6 +1,6 @@
 var fs = require('fs');
 var faker = require('faker');
-var dataPath = 'seeds/data/'
+var dataPath = 'seeds/data/';
 
 var users = [];
 var todos = [];
@@ -18,7 +18,7 @@ for(u = 10; u >= 0; u--){
     "password": faker.internet.password(),
     "code": faker.finance.account(),
     "verified": faker.random.boolean()
-  }
+  };
   users.push(usersArray);
 
   /* Create todos for users */
@@ -28,7 +28,7 @@ for(u = 10; u >= 0; u--){
       "user_id": user_id,
       "text": faker.hacker.phrase(),
       "complete": faker.random.boolean()
-    }
+    };
     todos.push(todosArray);
   }
 }

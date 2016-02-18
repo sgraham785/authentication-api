@@ -1,7 +1,7 @@
 // generate simple verification code
 var genCode = function generateCode(){
         return Math.random().toString(36).slice(-8);
-    }
+    };
 
 // private method
 //function genToken(user) {

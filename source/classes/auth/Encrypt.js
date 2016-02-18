@@ -23,4 +23,4 @@ var comparePassword = function(password, userPassword, callback) {
 module.exports = {
     hashPassword: hashPassword,
     comparePassword: comparePassword
-}
+};
