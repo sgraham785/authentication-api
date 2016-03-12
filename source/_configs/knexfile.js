@@ -8,7 +8,6 @@ var env = path.join(__dirname, '../..', '.env');
 if (fs.existsSync(env)){
     dotenv.load();
 }
-console.log(process.env.DB_HOST);
 
 var dbconf = {
    client: 'pg',

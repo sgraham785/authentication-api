@@ -1,9 +1,9 @@
-var BaseModel = require('../../classes/base/model');
+var BaseModel = require('../../../classes/base/model');
 
 var instanceProps = {
   tableName: 'todos',
   hasTimestamps: true,
-  author: function () {
+  users: function () {
       return this.belongsTo(require('../users/model'));
   }
 };
@@ -21,7 +21,9 @@ var classProps = {
       return qb.whereIn('complete', value);
     }
   },
-  relations: []
+  relations: [
+    'users'
+  ]
 };
 
 module.exports = BaseModel.extend(instanceProps, classProps);

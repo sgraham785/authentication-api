@@ -1,4 +1,4 @@
-var BaseModel = require('../../classes/base/model');
+var BaseModel = require('../../../classes/base/model');
 
 var instanceProps = {
   tableName: 'users',
@@ -24,7 +24,9 @@ var classProps = {
       return qb.whereIn('verified', value);
     }
   },
-  relations: []
+  relations: [
+    'todos'
+  ]
 };
 
 module.exports = BaseModel.extend(instanceProps, classProps);

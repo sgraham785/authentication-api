@@ -6,8 +6,11 @@ var routeBuilder = require('express-routebuilder');
 var Endpoints = require('endpoints');
 
 module.exports = new Endpoints.Application({
-  searchPaths: [path.join(__dirname, '../..', 'modules')],
-  routeBuilder: function (routes, prefix) {
+  searchPaths: [
+    path.join(__dirname, '../..', 'modules/private'),
+    path.join(__dirname, '../..', 'modules/public')
+  ],
+  routeBuilder: function(routes, prefix) {
     return routeBuilder(express.Router(), routes, prefix);
   },
   Controller: Endpoints.Controller.extend({

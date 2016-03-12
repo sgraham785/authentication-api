@@ -1,12 +1,13 @@
 var host = process.env.APP_HOST || 'localhost';
 var port = process.env.APP_PORT || '8080';
+var env = process.env.NODE_ENV || 'development';
 var express = require('express');
-var app = express();
+var server = express();
 
-app.use(require('./source'));
+server.use(require('./source'));
 
-app.listen(port, host);
+server.listen(port, host);
 
-console.log('Server running on, %s:%d', host, port);
+console.log('Server running on, %s:%d. NODE_ENV = %s', host, port, env);
 
-module.exports = app;
+module.exports = server;
