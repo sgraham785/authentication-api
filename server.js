@@ -2,7 +2,10 @@ var fs = require('fs');
 var path = require('path');
 var express = require('express');
 var dotenv = require('dotenv').config();
+var methodOverride = require('method-override');
+var session = require('express-session');
 var bodyParser = require('body-parser');
+var cookieParser = require('cookie-parser');
 var cors = require('cors');
 var helmet = require('helmet');
 var csurf = require('csurf');
@@ -14,8 +17,11 @@ var env = process.env.NODE_ENV || 'development';
 
 var server = express();
 
-//app.use(methodOverride());
+// Set view engine
+server.set('views', path.join(__dirname, 'source/views'));
+server.set('view engine', 'jade');
 
+server.use(methodOverride());
 
 server.use(bodyParser.urlencoded({
   extended: false,
@@ -23,6 +29,16 @@ server.use(bodyParser.urlencoded({
 }));
 server.use(bodyParser.json({
   type: ['application/json', 'application/vnd.api+json']
+}));
+
+//setup express sessions
+server.use(cookieParser());
+server.use(session({
+  secret: process.env.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: true,
+  expires : new Date(Date.now() + 3600000), //1 Hour
+  cookie: { httpOnly:true, secure: true }
 }));
 
 var corsOptions = {
@@ -41,6 +57,7 @@ server.all('/*', function(req, res, next) {
     next();
   }
 });
+
 // ======== *** SECURITY MIDDLEWARE *** 
 
 server.use(helmet());

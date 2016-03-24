@@ -3,6 +3,7 @@ var path = require('path');
 var express = require('express');
 var favicon = require('serve-favicon');
 var nunjucks = require('nunjucks');
+var jade = require('jade');
 
 var auth = require('./classes/auth');
 var API = require('./classes/api');
@@ -12,12 +13,11 @@ var app = express();
 app.use(favicon(__dirname + '/views/favicon.ico'));
 
 // view engine setup for emails
-nunjucks.configure('views', {
-    autoescape: true,
-    express: app
-});
-//app.set('views', path.join(__dirname, 'views'));
-//app.set('view engine', 'jade');
+// nunjucks.configure('views', {
+//     autoescape: true,
+//     express: app
+// });
+
 
 // Register & use declared endpoints
 var modulesPath = path.join(__dirname, 'modules');
