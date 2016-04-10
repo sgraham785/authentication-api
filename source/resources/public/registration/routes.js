@@ -8,6 +8,9 @@ exports.map = {
     })
   },
   get: {
-    '/verify/:code': controller.read()
+    '/': controller.read()
   }
+  //get: {
+  //  '/verify/:code': controller.read()
+  //}
 };

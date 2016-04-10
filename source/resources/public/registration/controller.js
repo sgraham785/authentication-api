@@ -1,4 +1,4 @@
-var dirnames = __dirname.split(require("path").sep)
+var dirnames = __dirname.split(require("path").sep);
 var thisFolderName = dirnames.pop();
 var parentFolderName = dirnames.pop();
 

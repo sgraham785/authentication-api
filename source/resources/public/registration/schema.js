@@ -11,16 +11,16 @@ module.exports = {
         type: 'string'
       },
       password: {
-        type: 'string',
+        type: 'string'
       },
       code: {
-        type: 'string',
+        type: 'string'
       },
       created_at: {
-        type: 'string',
+        type: 'string'
       },
       updated_at: {
-        type: 'string',
+        type: 'string'
       }
     }
   }

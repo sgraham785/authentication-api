@@ -19,19 +19,22 @@ app.use(favicon(__dirname + '/views/favicon.ico'));
 // });
 
 
-// Register & use declared endpoints
-var modulesPath = path.join(__dirname, 'modules');
-var resourceTypes = fs.readdirSync(modulesPath);
+// Register & use declared resource naming
+var resourcesPath = path.join(__dirname, 'resources');
+var resourceTypes = fs.readdirSync(resourcesPath);
 
 resourceTypes.forEach(function(resourceType) {
-  var resourcesPath = path.join(__dirname, 'modules/' + resourceType);
-  var resources = fs.readdirSync(resourcesPath);
+  var resourcesTypePath = resourcesPath + resourceType;
+  var resources = fs.readdirSync(resourcesTypePath);
   resources.forEach(function(resource) {
-    app.all('/v1/public/*');
-    app.all('/v1/private/*', auth.requireToken);
     API.register(resource);
     app.use(API.endpoint(resource));
   });
+});
+
+// URI handling
+app.get('/', function(request, response) {
+  response.redirect('/v1');
 });
 
 app.get('/v1', function(request, response) {
@@ -39,9 +42,8 @@ app.get('/v1', function(request, response) {
   response.send(JSON.stringify(API.index(), null, 2));
 });
 
-app.get('/', function(request, response) {
-  response.redirect('/v1');
-});
+app.all('/v1/public/*');
+app.all('/v1/private/*', auth.requireToken);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

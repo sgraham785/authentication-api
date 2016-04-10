@@ -77,7 +77,7 @@ server.use(helmet.contentSecurityPolicy({
   safari5: false
 }));
 
-if(process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'production') {
+if(process.env.NODE_ENV !== 'development' || process.env.NODE_ENV === 'production') {
   //CSURF
   console.log('ADDING CSURF: true');
   var valueFunction = function(req){
