@@ -1,5 +1,5 @@
-var controller = require('./controller');
-var schema = require('./schema');
+var controller = require('./controller')
+var schema = require('./schema')
 
 exports.map = {
   post: {
@@ -10,7 +10,7 @@ exports.map = {
   get: {
     '/': controller.read()
   }
-  //get: {
-  //  '/verify/:code': controller.read()
-  //}
-};
+  // get: {
+  //   '/verify/:code': controller.read()
+  // }
+}

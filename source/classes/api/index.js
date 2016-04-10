@@ -1,15 +1,15 @@
-var path = require('path');
-var express = require('express');
-var routeBuilder = require('express-routebuilder');
-var Endpoints = require('endpoints');
+var path = require('path')
+var express = require('express')
+var routeBuilder = require('express-routebuilder')
+var Endpoints = require('endpoints')
 
 module.exports = new Endpoints.Application({
   searchPaths: [
     path.join(__dirname, '../..', 'resources/private'),
     path.join(__dirname, '../..', 'resources/public')
   ],
-  routeBuilder: function(routes, prefix) {
-    return routeBuilder(express.Router(), routes, prefix);
+  routeBuilder: function (routes, prefix) {
+    return routeBuilder(express.Router(), routes, prefix)
   },
   Controller: Endpoints.Controller.extend({
     baseUrl: '/v1',
@@ -17,4 +17,4 @@ module.exports = new Endpoints.Application({
     format: Endpoints.Format.jsonapi,
     validators: [Endpoints.ValidateJsonSchema]
   })
-});
+})

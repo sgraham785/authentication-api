@@ -1,5 +1,5 @@
-var controller = require('./controller');
-var schema = require('./schema');
+var controller = require('./controller')
+var schema = require('./schema')
 
 exports.map = {
   post: {
@@ -24,4 +24,4 @@ exports.map = {
     '/:id': controller.destroy(),
     '/:id/relationships/:relation': controller.destroyRelation()
   }
-};
+}

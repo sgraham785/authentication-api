@@ -8,13 +8,13 @@ module.exports = {
         type: 'string'
       },
       complete: {
-        type: 'string',
+        type: 'string'
       },
       created_at: {
-        type: 'string',
+        type: 'string'
       },
       updated_at: {
-        type: 'string',
+        type: 'string'
       },
       links: {
         user_id: {
@@ -23,4 +23,4 @@ module.exports = {
       }
     }
   }
-};
+}

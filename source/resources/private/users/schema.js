@@ -8,22 +8,22 @@ module.exports = {
         type: 'string'
       },
       last_name: {
-        type: 'string',
+        type: 'string'
       },
       email: {
-        type: 'string',
+        type: 'string'
       },
       code: {
-        type: 'string',
+        type: 'string'
       },
       verified: {
-        type: 'string',
+        type: 'string'
       },
       created_at: {
-        type: 'string',
+        type: 'string'
       },
       updated_at: {
-        type: 'string',
+        type: 'string'
       },
       links: {
         todo_id: {
@@ -32,4 +32,4 @@ module.exports = {
       }
     }
   }
-};
+}

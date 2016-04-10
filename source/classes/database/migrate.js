@@ -1,11 +1,11 @@
-var dbconf = require('../../_configurations/knexfile');
-var knex = require('knex')(dbconf);
+var dbconf = require('../../_configurations/knexfile')
+var knex = require('knex')(dbconf)
 
-console.log('Running migrations...');
+console.log('Running migrations...')
 knex.migrate.latest(dbconf).then(function () {
-  console.log('Running seeders...');
-  return knex.seed.run(dbconf);
+  console.log('Running seeders...')
+  return knex.seed.run(dbconf)
 }).then(function () {
-  console.log('Done...');
-  process.exit(0);
-});
+  console.log('Done...')
+  process.exit(0)
+})
