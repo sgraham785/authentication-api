@@ -1,14 +1,5 @@
+require('dotenv').config()
 var nodemailer = require('nodemailer')
-var path = require('path')
-var fs = require('fs')
-
-var dotenv = require('dotenv')
-var envFile = path.join(__dirname, '..', '.env')
-
-// load up .env file
-if (fs.existsSync(envFile)) {
-  dotenv.load()
-}
 
 // create reusable transporter object using SMTP transport
 var transporter = nodemailer.createTransport({

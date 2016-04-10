@@ -1,13 +1,4 @@
-var path = require('path')
-var fs = require('fs')
-
-var dotenv = require('dotenv')
-var env = path.join(__dirname, '../..', '.env')
-
-// load up .env file
-if (fs.existsSync(env)) {
-  dotenv.load()
-}
+require('dotenv').config()
 
 var dbconf = {
   client: 'pg',

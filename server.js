@@ -1,6 +1,6 @@
+require('dotenv').config()
 var path = require('path')
 var express = require('express')
-var dotenv = require('dotenv').config()
 var methodOverride = require('method-override')
 var session = require('express-session')
 var bodyParser = require('body-parser')
@@ -13,7 +13,7 @@ var logger = require('morgan')
 var host = process.env.APP_HOST || 'localhost'
 var port = process.env.APP_PORT || '8080'
 var env = process.env.NODE_ENV || 'development'
-console.log(process.env.NODE_ENV)
+
 var server = express()
 
 server.use(methodOverride())
