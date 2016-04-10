@@ -7,6 +7,8 @@ This is a boilerplate API server using Node.js and PostgreSQL.  It has a TODO ex
 PostrgreSQL 9.4+
 Nodemon
 
+[![js-standard-style](https://cdn.rawgit.com/feross/standard/master/badge.svg)](https://github.com/feross/standard)
+
 ## Installation
 
 `npm -g install nodemon`
