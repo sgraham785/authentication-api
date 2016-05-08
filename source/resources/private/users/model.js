@@ -14,8 +14,11 @@ var classProps = {
     id: function (qb, value) {
       return qb.whereIn('id', value)
     },
-    name: function (qb, value) {
+    first_name: function (qb, value) {
       return qb.whereIn('first_name', value)
+    },
+    last_name: function (qb, value) {
+      return qb.whereIn('last_name', value)
     },
     email: function (qb, value) {
       return qb.whereIn('email', value)

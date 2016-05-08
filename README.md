@@ -36,3 +36,6 @@ TODO: Add important development team members and emails
 ## History
 
 TODO: Write history
+
+## Issues
+Problem with related link in return https://github.com/endpoints/endpoints-example/issues/27

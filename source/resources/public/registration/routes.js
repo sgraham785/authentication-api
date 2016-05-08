@@ -9,8 +9,10 @@ exports.map = {
   },
   get: {
     '/': controller.read()
+  },
+  patch: {
+    '/verify/:code': controller.update({
+      schema: schema
+    })
   }
-  // get: {
-  //   '/verify/:code': controller.read()
-  // }
 }
