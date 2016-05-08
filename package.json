@@ -55,7 +55,9 @@
     "yargs": "^3.7.0"
   },
   "devDependencies": {
+    "faker": "^3.0.1",
     "jshint": "^2.5.11",
-    "faker": "^3.0.1"
+    "nsp": "^2.3.0",
+    "swagger-node-express": "^2.1.3"
   }
 }

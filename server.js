@@ -9,12 +9,17 @@ var cors = require('cors')
 var helmet = require('helmet')
 var csurf = require('csurf')
 var logger = require('morgan')
+var jade = require('jade')
 
 var host = process.env.APP_HOST || 'localhost'
 var port = process.env.APP_PORT || '8080'
 var env = process.env.NODE_ENV || 'development'
 
 var server = express()
+
+// set views and engine for errors
+server.set('views', __dirname + '/source/views')
+server.set('view engine', 'jade')
 
 server.use(methodOverride())
 
