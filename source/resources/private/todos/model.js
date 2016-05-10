@@ -3,13 +3,13 @@ var BaseModel = require('../../../classes/base/model')
 var instanceProps = {
   tableName: 'todos',
   hasTimestamps: true,
-  users: function () {
+  user: function () {
     return this.belongsTo(require('../users/model'))
   }
 }
 
 var classProps = {
-  typeName: 'todos',
+  typeName: 'todo',
   filters: {
     id: function (qb, value) {
       return qb.whereIn('id', value)
@@ -22,7 +22,7 @@ var classProps = {
     }
   },
   relations: [
-    'users'
+    'user'
   ]
 }
 

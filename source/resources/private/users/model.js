@@ -9,7 +9,7 @@ var instanceProps = {
 }
 
 var classProps = {
-  typeName: 'users',
+  typeName: 'user',
   filters: {
     id: function (qb, value) {
       return qb.whereIn('id', value)
