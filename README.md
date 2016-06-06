@@ -54,6 +54,7 @@ in no particular order
 - [x] Add mailer
 - [x] Use faker for seeding
 - [ ] Utilize swagger documentation
+- [ ] Add Dockerfile
 
 ## Known Issues
 * Problem with related link in return https://github.com/endpoints/endpoints-example/issues/27
