@@ -3,6 +3,7 @@ var path = require('path')
 var express = require('express')
 var favicon = require('serve-favicon')
 var nunjucks = require('nunjucks')
+require('../logging')
 
 var auth = require('./classes/auth')
 var API = require('./classes/api')
@@ -40,7 +41,7 @@ app.get('/v1', function (request, response) {
 })
 
 app.all('/v1/public/*')
-app.all('/v1/private/*', auth.requireToken)
+app.all('/v1/private/*'/*, auth.requireToken*/)
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

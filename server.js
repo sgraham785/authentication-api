@@ -1,4 +1,5 @@
 require('dotenv').config()
+require('./logging')
 var path = require('path')
 var express = require('express')
 var methodOverride = require('method-override')
