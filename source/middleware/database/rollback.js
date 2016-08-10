@@ -1,4 +1,4 @@
-var dbConfig = require('../../_configs/knexfile')
+var dbConfig = require('../../configurations/knexfile')
 var knex = require('knex')(dbConfig)
 
 console.log('Running rollback...')

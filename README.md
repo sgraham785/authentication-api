@@ -19,7 +19,7 @@ Nodemon
 
 Run database migrations & seeds:
 
-`node source/classes/database/migrate.js `
+`node source/middleware/database/migrate.js `
 
 [![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/f8493f5b75ab1b296b22)
 

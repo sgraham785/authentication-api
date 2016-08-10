@@ -2,7 +2,7 @@ var dirnames = __dirname.split(require('path').sep)
 var thisFolderName = dirnames.pop()
 var parentFolderName = dirnames.pop()
 
-var API = require('../../../classes/api')
+var API = require('../../../middleware/api')
 
 module.exports = new API.Controller({
   model: require('./model'),

@@ -1,7 +1,7 @@
 var fs = require('fs')
 var path = require('path')
 
-var transporter = require('../../_configs/mailer').transporter
+var transporter = require('../../configurations/mailer').transporter
 var templatesDir = path.resolve(__dirname, '..', 'public/views/mail')
 var emailTemplates = require('email-templates')
 

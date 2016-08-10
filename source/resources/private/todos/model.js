@@ -1,4 +1,4 @@
-var BaseModel = require('../../../classes/base/model')
+var BaseModel = require('../../../middleware/base/model')
 
 var instanceProps = {
   tableName: 'todos',

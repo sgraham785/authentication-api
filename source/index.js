@@ -5,8 +5,8 @@ var favicon = require('serve-favicon')
 var nunjucks = require('nunjucks')
 require('../logging')
 
-var auth = require('./classes/auth')
-var API = require('./classes/api')
+var auth = require('./middleware/auth')
+var API = require('./middleware/api')
 var app = express()
 
 app.use(favicon(path.resolve(__dirname, 'views/favicon.ico')))
