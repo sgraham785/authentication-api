@@ -38,5 +38,5 @@ var classProps = {
   relations: []
 }
 
-console.log('classProps= ' + JSON.stringify(classProps))
+//console.log('classProps= ' + JSON.stringify(classProps))
 module.exports = BaseModel.extend(instanceProps, classProps)
