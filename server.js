@@ -79,31 +79,26 @@ server.use(helmet.contentSecurityPolicy({
   }
 }))
 
-if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'production') {
-  // CSURF
-  console.log('ADDING CSURF: true')
-  var valueFunction = function (req) {
-    var result = (req.body && req.body._csrf) ||
-      (req.query && req.query._csrf) ||
-      (req.cookies && req.cookies[ 'XSRF-TOKEN' ]) ||
-      (req.headers[ 'csrf-token' ]) ||
-      (req.headers[ 'xsrf-token' ]) ||
-      (req.headers[ 'x-csrf-token' ]) ||
-      (req.headers[ 'x-xsrf-token' ])
+// ======== *** CSURF MIDDLEWARE ***
+var valueFunction = function (req) {
+  var result = (req.body && req.body._csrf) ||
+    (req.query && req.query._csrf) ||
+    (req.cookies && req.cookies[ 'XSRF-TOKEN' ]) ||
+    (req.headers[ 'csrf-token' ]) ||
+    (req.headers[ 'xsrf-token' ]) ||
+    (req.headers[ 'x-csrf-token' ]) ||
+    (req.headers[ 'x-xsrf-token' ])
 
-    return result
-  }
-
-  server.use(csurf({ value: valueFunction }))
-
-  server.use(function (req, res, next) {
-    res.cookie('XSRF-TOKEN', req.csrfToken())
-    res.locals.csrftoken = req.csrfToken()
-    next()
-  })
-} else {
-  console.log('ADDING CSURF: false')
+  return result
 }
+
+server.use(csurf({ value: valueFunction }))
+
+server.use(function (req, res, next) {
+  res.cookie('XSRF-TOKEN', req.csrfToken())
+  res.locals.csrftoken = req.csrfToken()
+  next()
+})
 
 // error handlers
 
@@ -141,20 +136,5 @@ server.use(require('./source'))
 server = https.createServer(credentials, server)
 server.listen(https_port, host)
 console.log('Server running on, %s:%d. NODE_ENV = %s', host, https_port, env)
-// process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
-// var options = {
-//   host: 'localhost',
-//   port: 8443,
-//   path: '/v1/private/todos/1'
-// };
-// https.get(options, function(res) {
-//   console.log("Got response: " + res.statusCode);
-//
-//   for(var item in res.headers) {
-//     console.log(item + ": " + res.headers[item]);
-//   }
-// }).on('error', function(e) {
-//   console.log("Got error: " + e.message);
-// });
 
 module.exports = server
