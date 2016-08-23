@@ -2,6 +2,7 @@ var fs = require('fs')
 var path = require('path')
 var express = require('express')
 var favicon = require('serve-favicon')
+var cors = require('cors')
 var nunjucks = require('nunjucks')
 require('../logging')
 

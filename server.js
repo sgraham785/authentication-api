@@ -21,11 +21,11 @@ var certificate = fs.readFileSync('sslcert/server.crt', 'utf8')
 var credentials = {key: privateKey, cert: certificate}
 
 var host = process.env.SERVER_HOST || 'localhost'
-var http_port = process.env.SERVER_HTTP_PORT || '8080'
 var https_port = process.env.SERVER_HTTPS_PORT || '8443'
 var env = process.env.NODE_ENV || 'development'
 
 var server = express()
+server.disable('x-powered-by')
 
 // set views and engine for errors
 server.set('views', __dirname + '/source/views')
@@ -51,37 +51,28 @@ server.use(session({
   cookie: { httpOnly: true, secure: true }
 }))
 
-var corsOptions = {
-  origins: host, // restrict it to the required domain
-  methods: 'GET,PUT,POST,DELETE,OPTIONS',
-  allowedHeaders: 'Content-type,Accept,X-Access-Token,X-Key',
+// ======== *** CORS MIDDLEWARE ***
+var corsWhitelist = ['localhost', 'http://example2.com']
+// Set CORS
+server.use(cors({
+  origin: host,
+  methods: ['GET', 'PUT', 'PATCH', 'POST', 'DELETE', 'HEAD'],
+  allowedHeaders: ['Content-type', 'Accept', 'X-Access-Token', 'X-Key'],
+  credentials: true,
   maxAge: 3600
-}
-// Enable ALL CORS for requests
-server.use(cors(corsOptions))
-// Fix res for OPTIONS CORS
-server.all('/*', function (req, res, next) {
-  if (req.method === 'OPTIONS') {
-    res.status(200).end()
-  } else {
-    next()
-  }
-})
+}))
 
 // ======== *** SECURITY MIDDLEWARE ***
 server.use(helmet())
-// setting CSP
-var scriptSources = [ 'self', 'unsafe-inline', 'unsafe-eval',
-'ajax.googleapis.com', 'www.google-analytics.com' ]
-var styleSources = [ 'self', 'unsafe-inline', 'ajax.googleapis.com' ]
-var connectSources = [ 'self' ]
-
+// set CSP
 server.use(helmet.contentSecurityPolicy({
   directives: {
-    defaultSrc: [ 'self' ],
-    scriptSrc: scriptSources,
-    styleSrc: styleSources,
-    connectSrc: connectSources,
+    defaultSrc: [ "'self'" ],
+    scriptSrc: [ "'self'", "'unsafe-inline'", "'unsafe-eval'",
+      'ajax.googleapis.com', 'www.google-analytics.com' ],
+    styleSrc: [ "'self'", "'unsafe-inline'", 'ajax.googleapis.com' ],
+    imgSrc: [ "'self'", 'data:' ],
+    connectSrc: [ "'self'" ],
     reportOnly: false,
     setAllHeaders: false,
     safari5: false
@@ -147,14 +138,23 @@ if (process.env.NODE_ENV === 'development') {
 
 server.use(require('./source'))
 
-if (process.env.NODE_ENV === 'development') {
-  var httpServer = http.createServer(server)
-}
 server = https.createServer(credentials, server)
-
-httpServer.listen(http_port, host)
 server.listen(https_port, host)
-
 console.log('Server running on, %s:%d. NODE_ENV = %s', host, https_port, env)
+// process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+// var options = {
+//   host: 'localhost',
+//   port: 8443,
+//   path: '/v1/private/todos/1'
+// };
+// https.get(options, function(res) {
+//   console.log("Got response: " + res.statusCode);
+//
+//   for(var item in res.headers) {
+//     console.log(item + ": " + res.headers[item]);
+//   }
+// }).on('error', function(e) {
+//   console.log("Got error: " + e.message);
+// });
 
 module.exports = server
