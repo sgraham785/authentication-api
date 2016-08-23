@@ -8,6 +8,7 @@ require('../logging')
 var auth = require('./middleware/auth')
 var API = require('./middleware/api')
 var app = express()
+app.disable('x-powered-by')
 
 app.use(favicon(path.resolve(__dirname, 'views/favicon.ico')))
 

@@ -1,5 +1,6 @@
 require('dotenv').config()
 require('./logging')
+var fs = require('fs')
 var path = require('path')
 var express = require('express')
 var methodOverride = require('method-override')
@@ -12,8 +13,16 @@ var csurf = require('csurf')
 var logger = require('morgan')
 var jade = require('jade')
 
-var host = process.env.APP_HOST || 'localhost'
-var port = process.env.APP_PORT || '8080'
+var http = require('http')
+var https = require('https')
+
+var privateKey  = fs.readFileSync('sslcert/server.key', 'utf8')
+var certificate = fs.readFileSync('sslcert/server.crt', 'utf8')
+var credentials = {key: privateKey, cert: certificate}
+
+var host = process.env.SERVER_HOST || 'localhost'
+var http_port = process.env.SERVER_HTTP_PORT || '8080'
+var https_port = process.env.SERVER_HTTPS_PORT || '8443'
 var env = process.env.NODE_ENV || 'development'
 
 var server = express()
@@ -43,7 +52,7 @@ server.use(session({
 }))
 
 var corsOptions = {
-  origins: '*', // restrict it to the required domain
+  origins: host, // restrict it to the required domain
   methods: 'GET,PUT,POST,DELETE,OPTIONS',
   allowedHeaders: 'Content-type,Accept,X-Access-Token,X-Key',
   maxAge: 3600
@@ -60,25 +69,26 @@ server.all('/*', function (req, res, next) {
 })
 
 // ======== *** SECURITY MIDDLEWARE ***
-
 server.use(helmet())
-
 // setting CSP
-var scriptSources = [ 'self', 'unsafe-inline', 'unsafe-eval', 'ajax.googleapis.com', 'www.google-analytics.com' ]
+var scriptSources = [ 'self', 'unsafe-inline', 'unsafe-eval',
+'ajax.googleapis.com', 'www.google-analytics.com' ]
 var styleSources = [ 'self', 'unsafe-inline', 'ajax.googleapis.com' ]
 var connectSources = [ 'self' ]
 
 server.use(helmet.contentSecurityPolicy({
-  defaultSrc: [ 'self' ],
-  scriptSrc: scriptSources,
-  styleSrc: styleSources,
-  connectSrc: connectSources,
-  reportOnly: false,
-  setAllHeaders: false,
-  safari5: false
+  directives: {
+    defaultSrc: [ 'self' ],
+    scriptSrc: scriptSources,
+    styleSrc: styleSources,
+    connectSrc: connectSources,
+    reportOnly: false,
+    setAllHeaders: false,
+    safari5: false
+  }
 }))
 
-if (process.env.NODE_ENV !== 'development' || process.env.NODE_ENV === 'production') {
+if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'production') {
   // CSURF
   console.log('ADDING CSURF: true')
   var valueFunction = function (req) {
@@ -137,8 +147,14 @@ if (process.env.NODE_ENV === 'development') {
 
 server.use(require('./source'))
 
-server.listen(port, host)
+if (process.env.NODE_ENV === 'development') {
+  var httpServer = http.createServer(server)
+}
+server = https.createServer(credentials, server)
 
-console.log('Server running on, %s:%d. NODE_ENV = %s', host, port, env)
+httpServer.listen(http_port, host)
+server.listen(https_port, host)
+
+console.log('Server running on, %s:%d. NODE_ENV = %s', host, https_port, env)
 
 module.exports = server
