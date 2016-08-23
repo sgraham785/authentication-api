@@ -3,19 +3,15 @@ require('./logging')
 var fs = require('fs')
 var path = require('path')
 var express = require('express')
-var methodOverride = require('method-override')
 var session = require('express-session')
 var bodyParser = require('body-parser')
-var cookieParser = require('cookie-parser')
 var cors = require('cors')
 var helmet = require('helmet')
 var csurf = require('csurf')
 var logger = require('morgan')
 var jade = require('jade')
 
-var http = require('http')
 var https = require('https')
-
 var privateKey  = fs.readFileSync('sslcert/server.key', 'utf8')
 var certificate = fs.readFileSync('sslcert/server.crt', 'utf8')
 var credentials = {key: privateKey, cert: certificate}
@@ -27,12 +23,11 @@ var env = process.env.NODE_ENV || 'development'
 var server = express()
 server.disable('x-powered-by')
 
-// set views and engine for errors
+// ======== *** VIEW ENGINE MIDDLEWARE ***
 server.set('views', __dirname + '/source/views')
 server.set('view engine', 'jade')
 
-server.use(methodOverride())
-
+// ======== *** BODY-PARSER MIDDLEWARE ***
 server.use(bodyParser.urlencoded({
   extended: false,
   type: 'application/x-www-form-urlencoded'
@@ -41,10 +36,10 @@ server.use(bodyParser.json({
   type: [ 'application/json', 'application/vnd.api+json' ]
 }))
 
-// setup express sessions
-server.use(cookieParser())
+// ======== *** SESSION MIDDLEWARE ***
 server.use(session({
   secret: process.env.SESSION_SECRET,
+  store: process.env.SESSION_STORE,
   resave: false,
   saveUninitialized: true,
   expires: new Date(Date.now() + 3600000), // 1 Hour
@@ -52,6 +47,7 @@ server.use(session({
 }))
 
 // ======== *** CORS MIDDLEWARE ***
+// TODO: fix multi origin
 var corsWhitelist = ['localhost', 'http://example2.com']
 // Set CORS
 server.use(cors({
@@ -91,7 +87,7 @@ var valueFunction = function (req) {
 
   return result
 }
-
+// set CSURF
 server.use(csurf({ value: valueFunction }))
 
 server.use(function (req, res, next) {

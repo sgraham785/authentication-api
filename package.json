@@ -1,6 +1,6 @@
 {
   "name": "node-postgres-api",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "private": false,
   "description": "an example api written using endpoints",
   "homepage": "https://github.com/sgraham785/node-postgres-api-server",
@@ -27,7 +27,6 @@
     "body-parser": "~1.15.0",
     "bookshelf": "^0.9.1",
     "checkit": "^0.6.0",
-    "cookie-parser": "^1.4.1",
     "cors": "^2.8.0",
     "csurf": "^1.8.3",
     "debug": "~2.1.1",
@@ -43,7 +42,6 @@
     "jwt-async": "^1.1.2",
     "knex": "^0.9.0",
     "lodash": "^4.3.0",
-    "method-override": "^2.3.5",
     "morgan": "~1.6.1",
     "nodemailer": "^2.1.0",
     "nunjucks": "^2.3.0",
