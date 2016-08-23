@@ -37,9 +37,12 @@ server.use(bodyParser.json({
 }))
 
 // ======== *** SESSION MIDDLEWARE ***
+// TODO: implement session store:
+// https://www.npmjs.com/package/connect-session-knex
+// https://www.npmjs.com/package/connect-redis
 server.use(session({
   secret: process.env.SESSION_SECRET,
-  store: process.env.SESSION_STORE,
+  //store: ,
   resave: false,
   saveUninitialized: true,
   expires: new Date(Date.now() + 3600000), // 1 Hour
