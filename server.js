@@ -12,9 +12,9 @@ var logger = require('morgan')
 var jade = require('jade')
 
 var https = require('https')
-var privateKey  = fs.readFileSync('sslcert/server.key', 'utf8')
+var privateKey = fs.readFileSync('sslcert/server.key', 'utf8')
 var certificate = fs.readFileSync('sslcert/server.crt', 'utf8')
-var credentials = {key: privateKey, cert: certificate}
+var credentials = { key: privateKey, cert: certificate }
 
 var host = process.env.SERVER_HOST || 'localhost'
 var https_port = process.env.SERVER_HTTPS_PORT || '8443'
@@ -42,7 +42,7 @@ server.use(bodyParser.json({
 // https://www.npmjs.com/package/connect-redis
 server.use(session({
   secret: process.env.SESSION_SECRET,
-  //store: ,
+  // store: ,
   resave: false,
   saveUninitialized: true,
   expires: new Date(Date.now() + 3600000), // 1 Hour

@@ -18,8 +18,9 @@
   "license": "MIT",
   "scripts": {
     "start": "nodemon server.js",
-    "test": "npm run lint && mocha -R spec",
-    "lint": "jshint server.js source"
+    "test": "npm run lint && mocha -R spec && standard",
+    "lint": "jshint server.js source",
+    "sec": "nsp check"
   },
   "dependencies": {
     "bcrypt": "^0.8.2",
