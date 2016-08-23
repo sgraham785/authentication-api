@@ -1,6 +1,6 @@
 var bcrypt = require('bcrypt')
 
-var hashPassword = function (password, callback) {
+var hasher = function (password, callback) {
   bcrypt.genSalt(10, function (err, salt) {
     if (err) {
       return callback(err)
@@ -11,7 +11,7 @@ var hashPassword = function (password, callback) {
   })
 }
 
-var comparePassword = function (password, userPassword, callback) {
+var validator = function (password, userPassword, callback) {
   bcrypt.compare(password, userPassword, function (err, isPasswordMatch) {
     if (err) {
       return callback(err)
@@ -21,6 +21,6 @@ var comparePassword = function (password, userPassword, callback) {
 }
 
 module.exports = {
-  hashPassword: hashPassword,
-  comparePassword: comparePassword
+  hasher: hasher,
+  validator: validator
 }
