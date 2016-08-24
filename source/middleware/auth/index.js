@@ -1,5 +1,4 @@
 // var app = require('express')()
-var JWT = require('jwt-async')
 // var Promise = require('bluebird')
 // var Checkit = require('checkit')
 
@@ -8,37 +7,7 @@ var Model = require('../../resources/private/users/model')
 var genCode = require('./verification').genCode
 var Mailer = require('../mailer').sendOne
 
-var jwt = new JWT({
-  crypto: {
-    algorithm: 'HS512',
-    secret: process.env.TOKEN_SECRET || 'NOT A SECRET AT ALL, YOU SHOULD CHANGE IT'
-  }
-})
-
 var authController = {
-
-  // require an auth-token middleware
-  requireToken: function (req, res, next) {
-    var token
-    if (req.headers.authorization && req.headers.authorization.split(' ')[ 0 ] === 'Bearer') {
-      token = req.headers.authorization.split(' ')[ 1 ]
-    }
-
-    if (req.body && req.body.token) {
-      token = req.body.token
-    }
-
-    if (!token) {
-      return res.status(401).send({ status: 401, message: 'Token not set.' })
-    }
-
-    jwt.verify(token, function (err, data) {
-      if (err) { return res.status(401).send({ status: 401, message: err }) }
-      req.user = data.claims.user
-      delete req.user.password
-      next()
-    })
-  },
 
   // get JWT token for login credentials
   login: function (req, res) {
@@ -50,15 +19,8 @@ var authController = {
     Model.User.login(data.email, data.password).then(function (user) {
       // remove sensitive info from JWT
       // delete user.attributes.email
-      delete user.get('password')
+      // delete user.get('password')
 
-      // create JWT
-      jwt.sign({ user: user }, function (err, token) {
-        if (err) {
-          return res.status(500).send({ status: 500, message: err.message })
-        }
-        return res.send({ token: token })
-      })
       // TODO: redirect to todo index
       // res.status(200)
       // res.redirect('/todos')

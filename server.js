@@ -9,7 +9,6 @@ var cors = require('cors')
 var helmet = require('helmet')
 var csurf = require('csurf')
 var logger = require('morgan')
-var jade = require('jade')
 
 var https = require('https')
 var privateKey = fs.readFileSync('sslcert/server.key', 'utf8')
@@ -22,10 +21,6 @@ var env = process.env.NODE_ENV || 'development'
 
 var server = express()
 server.disable('x-powered-by')
-
-// ======== *** VIEW ENGINE MIDDLEWARE ***
-server.set('views', __dirname + '/source/views')
-server.set('view engine', 'jade')
 
 // ======== *** BODY-PARSER MIDDLEWARE ***
 server.use(bodyParser.urlencoded({
@@ -51,7 +46,8 @@ server.use(session({
 
 // ======== *** CORS MIDDLEWARE ***
 // TODO: fix multi origin
-var corsWhitelist = ['localhost', 'http://example2.com']
+// var corsWhitelist = ['localhost', 'http://example2.com']
+
 // Set CORS
 server.use(cors({
   origin: host,
