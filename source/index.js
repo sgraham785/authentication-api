@@ -5,8 +5,8 @@ var favicon = require('serve-favicon')
 var nunjucks = require('nunjucks')
 require('../logging')
 
-var jwtVerify = require('./middleware/jwt/verify')
-var API = require('./middleware/api')
+var jwtVerify = require('./middleware/jsonwebtoken/verify')
+var API = require('./middleware/base/api')
 var app = express()
 app.disable('x-powered-by')
 
@@ -29,7 +29,7 @@ app.get('/v1', function (request, response) {
 })
 
 app.all('/v1/public/*')
-app.all('/v1/private/*', jwtVerify)
+process.env.NODE_ENV === 'development' ? app.all('/v1/private/*') : app.all('/v1/private/*', jwtVerify)
 
 // Register & use declared resource naming
 var resourcesPath = path.join(__dirname, 'resources')

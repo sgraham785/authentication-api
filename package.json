@@ -1,19 +1,19 @@
 {
-  "name": "node-postgres-api",
+  "name": "node-postgres-jsonapi-server",
   "version": "0.3.0",
   "private": false,
   "description": "an example api written using endpoints",
-  "homepage": "https://github.com/sgraham785/node-postgres-api-server",
+  "homepage": "https://github.com/sgraham785/node-postgres-jsonapi-server",
   "author": {
     "name": "Sean Graham",
     "url": "https://github.com/sgraham785"
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/sgraham785/node-postgres-api-server.git"
+    "url": "git://github.com/sgraham785/node-postgres-jsonapi-server.git"
   },
   "bugs": {
-    "url": "https://github.com/sgraham785/node-postgres-api-server/issues"
+    "url": "https://github.com/sgraham785/node-postgres-jsonapi-server/issues"
   },
   "license": "MIT",
   "scripts": {
@@ -24,15 +24,11 @@
     "standard": "standard"
   },
   "dependencies": {
-    "bcrypt": "^0.8.2",
-    "bluebird": "^3.3.0",
     "body-parser": "~1.15.0",
     "bookshelf": "^0.9.1",
-    "checkit": "^0.6.0",
     "cors": "^2.8.0",
     "csurf": "^1.8.3",
     "dotenv": "^2.0.0",
-    "email-templates": "^2.1.0",
     "endpoints": "^0.9.2",
     "express": "~4.13.2",
     "express-routebuilder": "^2.1.0",
@@ -46,12 +42,7 @@
     "nodemailer": "^2.1.0",
     "nunjucks": "^2.3.0",
     "pg": "^4.3.0",
-    "pg-promise": "~3.1.7",
-    "pg-query-stream": "^1.0.0",
-    "serve-favicon": "^2.3.0",
-    "validator": "^4.8.0",
-    "when": "^3.7.2",
-    "yargs": "^3.7.0"
+    "serve-favicon": "^2.3.0"
   },
   "devDependencies": {
     "debug": "^2.1.3",

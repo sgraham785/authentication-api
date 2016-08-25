@@ -3,7 +3,7 @@
 This is a boilerplate API server using Node.js and PostgreSQL.  It has a TODO example and user auth (which needs some work to finish up)
 
 ## Requirements
-Node.js (duh) Preferably 4.x.x +
+Node.js (duh) Preferably 5.5.x +
 
 PostrgreSQL 9.4+
 
@@ -50,13 +50,16 @@ in no particular order
 - [x] Migrations & Seeds
 - [x] Add security best practices
 - [x] Use JSON API specification
-- [ ] Implement password encryption
-- [ ] Use JWT for private route auth
+- [ ] ~~Implement password encryption~~
+- [x] Use JWT for private route auth
 - [x] Create Postman collection
 - [x] Add mailer
 - [x] Use faker for seeding
 - [ ] Utilize swagger documentation
-- [ ] Add Dockerfile
+- [ ] Dockerize
+- [x] Implement SSL
+- [ ] Add health checks
+- [ ] Add tests
 
 ## Known Issues
 * Problem with related link in return https://github.com/endpoints/endpoints-example/issues/27
