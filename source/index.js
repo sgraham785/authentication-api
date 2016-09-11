@@ -3,10 +3,12 @@ var path = require('path')
 var express = require('express')
 var favicon = require('serve-favicon')
 var nunjucks = require('nunjucks')
+var swaggerJSDoc = require('swagger-jsdoc')
 require('../logging')
 
 var jwtVerify = require('./middleware/jsonwebtoken/verify')
 var API = require('./middleware/base/api')
+
 var app = express()
 app.disable('x-powered-by')
 
@@ -17,6 +19,28 @@ nunjucks.configure('views', {
   autoescape: true,
   express: app
 })
+
+if (process.env.NODE_ENV === 'development') {
+  var swaggerOptions = {
+    swaggerDefinition: {
+      info: {
+        title: 'Todo API', // Title (required)
+        version: '1.0.0' // Version (required)
+      }
+    },
+    apis: [ // Path to the API docs
+      path.resolve(__dirname, 'resources/private/**/routes.js'),
+      path.resolve(__dirname, 'resources/public/**/routes.js')
+    ]
+  }
+
+  var swaggerSpec = swaggerJSDoc(swaggerOptions)
+
+  app.get('/api-docs.json', function (request, response) {
+    response.setHeader('Content-Type', 'application/json')
+    response.send(swaggerSpec)
+  })
+}
 
 // URI handling
 app.get('/', function (request, response) {
