@@ -58,6 +58,7 @@ in no particular order
 - [x] Implement SSL
 - [ ] Add health checks
 - [ ] Add tests
+- [ ] Implement Yo Generator 
 
 ## Known Issues
 * Problem with related link in return https://github.com/endpoints/endpoints-example/issues/27
