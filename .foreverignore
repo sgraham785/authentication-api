@@ -1,0 +1,5 @@
+docker
+logs
+node_modules
+sslcerts
+npm-debug.log

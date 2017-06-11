@@ -1,0 +1,21 @@
+app:
+  image: $IMAGE_NAME
+  volumes:
+    - ../test:/app/test
+  env_file: ../.env.development
+  environment:
+    - NODE_ENV=test
+    - ACCESS_CONTROL_ALLOW_ORIGIN=*
+  links:
+    - postgres
+    - redis
+
+postgres:
+  image: $IMAGE_NAME-pgdb1
+  ports:
+    - 5432
+
+redis:
+  image: $IMAGE_NAME-redisdb1
+  ports:
+    - 6379

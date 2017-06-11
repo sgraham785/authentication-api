@@ -1,25 +1,24 @@
-require('dotenv').config()
-require('./logging')
-var fs = require('fs')
-var path = require('path')
-var express = require('express')
-var session = require('express-session')
-var bodyParser = require('body-parser')
-var cors = require('cors')
-var helmet = require('helmet')
-var csurf = require('csurf')
-var logger = require('morgan')
+import fs from 'fs'
+import path from 'path'
+import express from 'express'
+import session from 'express-session'
+import bodyParser from 'body-parser'
+import cors from 'cors'
+import helmet from 'helmet'
+import csurf from 'csurf'
+import logger from 'morgan'
+import https from 'https'
+import { } from 'dotenv'
 
-var https = require('https')
-var privateKey = fs.readFileSync('sslcert/server.key', 'utf8')
-var certificate = fs.readFileSync('sslcert/server.crt', 'utf8')
-var credentials = { key: privateKey, cert: certificate }
+const privateKey = fs.readFileSync('sslcert/server.key', 'utf8')
+const certificate = fs.readFileSync('sslcert/server.crt', 'utf8')
+const credentials = { key: privateKey, cert: certificate }
 
-var host = process.env.SERVER_HOST || 'localhost'
-var https_port = process.env.SERVER_HTTPS_PORT || '8443'
-var env = process.env.NODE_ENV || 'development'
+const host = process.env.SERVER_HOST || 'localhost'
+const port = process.env.SERVER_port || '8443'
+const env = process.env.NODE_ENV || 'development'
 
-var server = express()
+let server = express()
 server.disable('x-powered-by')
 
 // ======== *** BODY-PARSER MIDDLEWARE ***
@@ -75,8 +74,8 @@ server.use(helmet.contentSecurityPolicy({
 }))
 
 // ======== *** CSURF MIDDLEWARE ***
-var valueFunction = function (req) {
-  var result = (req.body && req.body._csrf) ||
+const valueFunction = req => {
+  const result = (req.body && req.body._csrf) ||
     (req.query && req.query._csrf) ||
     (req.cookies && req.cookies[ 'XSRF-TOKEN' ]) ||
     (req.headers[ 'csrf-token' ]) ||
@@ -89,7 +88,7 @@ var valueFunction = function (req) {
 // set CSURF
 server.use(csurf({ value: valueFunction }))
 
-server.use(function (req, res, next) {
+server.use((req, res, next) => {
   res.cookie('XSRF-TOKEN', req.csrfToken())
   res.locals.csrftoken = req.csrfToken()
   next()
@@ -100,7 +99,7 @@ server.use(function (req, res, next) {
 // development error handler
 // will print stacktrace
 if (process.env.NODE_ENV === 'development') {
-  server.use(function (err, req, res, next) {
+  server.use((err, req, res, next) => {
     res.status(err.status || 500)
     res.render('error', {
       message: err.message,
@@ -111,7 +110,7 @@ if (process.env.NODE_ENV === 'development') {
 } else {
   // production error handler
   // no stacktraces leaked to user
-  server.use(function (err, req, res, next) {
+  server.use((err, req, res, next) => {
     res.status(err.status || 500)
     res.render('error', {
       message: err.message,
@@ -119,17 +118,17 @@ if (process.env.NODE_ENV === 'development') {
     })
   })
   server.use(logger('common', {
-    skip: function (req, res) {
+    skip (req, res) {
       return res.statusCode < 400
     },
     stream: path.resolve(__dirname, '/../app_errors.log')
   }))
 }
 
-server.use(require('./source'))
+server.use(require('./src'))
 
 server = https.createServer(credentials, server)
-server.listen(https_port, host)
-console.log('Server running on, %s:%d. NODE_ENV = %s', host, https_port, env)
+server.listen(port, host)
+console.log('Server running on, %s:%d. NODE_ENV = %s', host, port, env)
 
-module.exports = server
+export default server

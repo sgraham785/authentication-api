@@ -1,0 +1,21 @@
+app:
+  image: $IMAGE_NAME
+  ports:
+    - 8443:8443
+  volumes:
+    - ../:/app
+  env_file: ../.env.development
+  command: npm run dev
+  links:
+    - postgres
+    - redis
+
+postgres:
+  image: $IMAGE_NAME-pgdb1
+  ports:
+    - 5432:5432
+
+redis:
+  image: $IMAGE_NAME-redisdb1
+  ports:
+    - 6379:6379
