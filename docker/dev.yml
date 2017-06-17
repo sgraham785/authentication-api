@@ -9,6 +9,7 @@ app:
   links:
     - postgres
     - redis
+    - swagger
 
 postgres:
   image: $IMAGE_NAME-pgdb1
@@ -19,3 +20,10 @@ redis:
   image: $IMAGE_NAME-redisdb1
   ports:
     - 6379:6379
+
+swagger:
+  image: $IMAGE_NAME-swagger1
+  environment:
+    - API_URL=http://localhost:8080/api-docs.json
+  ports:
+    - 8080:8080

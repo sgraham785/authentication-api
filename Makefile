@@ -42,6 +42,7 @@ build:	clean
 build-deps:
 	sudo docker build -f docker/postgres/Dockerfile -t $(IMAGE_NAME)-pgdb1 ./
 	sudo docker build -f docker/redis/Dockerfile -t $(IMAGE_NAME)-redisdb1 ./
+	sudo docker build -f docker/swagger/Dockerfile -t $(IMAGE_NAME)-swagger1 ./
 build-dev:	build build-deps
 	sudo docker-compose -f docker/dev.yml up -d app
 up-dev:	down
