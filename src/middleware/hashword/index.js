@@ -10,7 +10,9 @@ export const encrypt = (text, callback) => {
 
 export const compare = (text, hashed, callback) => {
   bcrypt.compare(text, hashed, (err, isMatch) => {
-    if (err) { return callback(err) }
+    if (err) {
+      return callback(err)
+    }
     return callback(null, isMatch)
   })
 }

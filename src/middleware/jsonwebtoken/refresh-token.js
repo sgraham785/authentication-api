@@ -3,26 +3,26 @@ import shortid from 'shortid'
 import error from 'clickberry-http-errors'
 import config from 'clickberry-config'
 
-function create (req, res, next) {
+function create(req, res, next) {
   const user = req.user
   const refreshPayload = createRefreshPayload(user)
 
   user.refreshTokens = user.refreshTokens || []
 
-    // delete token if quantity is overflow
+  // delete token if quantity is overflow
   const maxSessions = config.getInt('token:maxSessions') || 10
   if (user.refreshTokens.length >= maxSessions) {
     user.refreshTokens.shift()
   }
 
-    // add new token
+  // add new token
   user.refreshTokens.push(refreshPayload.token)
 
   res.locals.refreshToken = createRefreshToken(refreshPayload)
   next()
 }
 
-function check (req, res, next) {
+function check(req, res, next) {
   const user = req.user
   const token = req.token
 
@@ -36,13 +36,13 @@ function check (req, res, next) {
   }
 }
 
-function remove (req, res, next) {
+function remove(req, res, next) {
   const user = req.user
   const token = req.token
 
   user.refreshTokens = user.refreshTokens || []
 
-    // remove token
+  // remove token
   user.refreshTokens.some((item, i, array) => {
     if (item === token) {
       array.splice(i, 1)
@@ -54,27 +54,27 @@ function remove (req, res, next) {
   next()
 }
 
-function removeAll (req, res, next) {
+function removeAll(req, res, next) {
   const user = req.user
   user.refreshTokens = []
 
   next()
 }
 
-export {create}
-export {check}
-export {remove}
-export {removeAll}
+export { create }
+export { check }
+export { remove }
+export { removeAll }
 
-function createRefreshPayload (user) {
+function createRefreshPayload(user) {
   return {
     token: shortid.generate(),
     userId: user._id
   }
 }
 
-function createRefreshToken (payload) {
+function createRefreshToken(payload) {
   const refreshSecret = config.get('token:refreshSecret')
   const refreshTimeout = config.getInt('token:refreshTimeout')
-  return jwt.sign(payload, refreshSecret, {expiresIn: refreshTimeout})
+  return jwt.sign(payload, refreshSecret, { expiresIn: refreshTimeout })
 }

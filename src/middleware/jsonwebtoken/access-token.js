@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken'
 import config from 'clickberry-config'
 
-export function create (req, res, next) {
+export function create(req, res, next) {
   const user = req.user
   const accessPayload = createAccessPayload(user)
 
@@ -9,28 +9,34 @@ export function create (req, res, next) {
   next()
 }
 
-export function verify (tokenName) {
+export function verify(tokenName) {
   return (req, res, next) => {
-    jwt.verify(req.body[tokenName], config.get('token:accessSecret'), (err, payloud) => {
-      if (err) { return next(err) }
+    jwt.verify(
+      req.body[tokenName],
+      config.get('token:accessSecret'),
+      (err, payloud) => {
+        if (err) {
+          return next(err)
+        }
 
-      req.tokens = req.tokens || {}
-      req.tokens[tokenName] = payloud
+        req.tokens = req.tokens || {}
+        req.tokens[tokenName] = payloud
 
-      next()
-    })
+        next()
+      }
+    )
   }
 }
 
-function createAccessPayload (user) {
+function createAccessPayload(user) {
   return {
     userId: user._id,
     role: user.role
   }
 }
 
-function createAccessToken (payload) {
+function createAccessToken(payload) {
   const accessSecret = config.get('token:accessSecret')
   const accessTimeout = config.getInt('token:accessTimeout')
-  return jwt.sign(payload, accessSecret, {expiresIn: accessTimeout})
+  return jwt.sign(payload, accessSecret, { expiresIn: accessTimeout })
 }

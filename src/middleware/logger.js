@@ -5,7 +5,7 @@ const logger = new winston.Logger()
 let production = (process.env.NODE_ENV || '').toLowerCase() === 'production'
 
 export default {
-  middleware (req, res, next) {
+  middleware(req, res, next) {
     console.info(req.method, req.url, res.statusCode)
     next()
   },
@@ -40,22 +40,22 @@ switch ((process.env.NODE_ENV || '').toLowerCase()) {
     break
 }
 
-function formatArgs (args) {
-  return [ util.format.apply(util.format, Array.prototype.slice.call(args)) ]
+function formatArgs(args) {
+  return [util.format.apply(util.format, Array.prototype.slice.call(args))]
 }
 
-console.log = function () {
+console.log = function() {
   logger.info(...formatArgs(arguments))
 }
-console.info = function () {
+console.info = function() {
   logger.info(...formatArgs(arguments))
 }
-console.warn = function () {
+console.warn = function() {
   logger.warn(...formatArgs(arguments))
 }
-console.error = function () {
+console.error = function() {
   logger.error(...formatArgs(arguments))
 }
-console.debug = function () {
+console.debug = function() {
   logger.debug(...formatArgs(arguments))
 }

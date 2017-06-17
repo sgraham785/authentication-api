@@ -14,10 +14,13 @@ var certificate = fs.readFileSync(path.join(__dirname, '/pem/jwt.crt'), 'utf8')
 //   // if jwt id mismatch, err == invalid jwt id
 // })
 
-var jwtVerify = function (req, res, next) {
+var jwtVerify = function(req, res, next) {
   var token
-  if (req.headers.authorization && req.headers.authorization.split(' ')[ 0 ] === 'Bearer') {
-    token = req.headers.authorization.split(' ')[ 1 ]
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.split(' ')[0] === 'Bearer'
+  ) {
+    token = req.headers.authorization.split(' ')[1]
   }
 
   if (req.body && req.body.token) {
@@ -28,8 +31,10 @@ var jwtVerify = function (req, res, next) {
     return res.status(401).send({ status: 401, message: 'Token not set.' })
   }
 
-  jwt.verify(token, certificate, function (err, decoded) {
-    if (err) { return res.status(401).send({ status: 401, message: err }) }
+  jwt.verify(token, certificate, function(err, decoded) {
+    if (err) {
+      return res.status(401).send({ status: 401, message: err })
+    }
     console.log(decoded)
     next()
   })

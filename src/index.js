@@ -28,7 +28,8 @@ if (process.env.NODE_ENV === 'development') {
         version: '1.0.0' // Version (required)
       }
     },
-    apis: [ // Path to the API docs
+    apis: [
+      // Path to the API docs
       path.resolve(__dirname, 'resources/**/routes.js')
     ]
   }
@@ -59,8 +60,8 @@ process.env.NODE_ENV === 'development'
 const resources = fs.readdirSync(path.join(__dirname, 'resources'))
 resources.forEach(resource => {
   console.log(resource)
-    // API.register(resource)
-    // app.use(API.endpoint(resource))
+  // API.register(resource)
+  // app.use(API.endpoint(resource))
 })
 
 // catch 404 and forward to error handler
