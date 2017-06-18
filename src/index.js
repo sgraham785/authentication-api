@@ -5,7 +5,7 @@ import favicon from 'serve-favicon'
 import swagger from 'swagger-jsdoc'
 import jwtVerify from './middleware/jsonwebtoken/verify'
 import { authorizeRequest } from './middleware/authorization'
-require('../logging')
+require('./middleware/logger')
 
 /**
  * TODOs:

@@ -14,7 +14,7 @@ CREATE ROLE users_owner
 -- schema user group
 DROP ROLE IF EXISTS users_user;
 
-CREATE ROLE users_appuser
+CREATE ROLE users_user
   NOSUPERUSER INHERIT NOCREATEDB NOCREATEROLE NOREPLICATION;
 
 -- schema read only group
@@ -24,30 +24,31 @@ CREATE ROLE users_readonly
   NOSUPERUSER INHERIT NOCREATEDB NOCREATEROLE NOREPLICATION;
 
 
--- login roles
+-- app owner role
+DROP ROLE IF EXISTS users_app_owner;
 
-DROP ROLE IF EXISTS users_appuser_user;
-
-CREATE ROLE users_appuser_user LOGIN
+CREATE ROLE users_app_owner LOGIN
   NOSUPERUSER INHERIT NOCREATEDB NOCREATEROLE NOREPLICATION;
-ALTER ROLE users_appuser_user
+ALTER ROLE users_app_owner
   SET search_path = users;
-ALTER ROLE users_appuser_user
+GRANT users_owner TO users_app_owner;
+
+-- app user role
+DROP ROLE IF EXISTS users_app_user;
+
+CREATE ROLE users_app_user LOGIN
+  NOSUPERUSER INHERIT NOCREATEDB NOCREATEROLE NOREPLICATION;
+ALTER ROLE users_app_user
+  SET search_path = users;
+ALTER ROLE users_app_user
   SET bytea_output = 'escape';
-GRANT users_user TO users_appuser_user;
+GRANT users_user TO users_app_user;
 
-DROP ROLE IF EXISTS users_appowner_user;
+-- app readonly role
+DROP ROLE IF EXISTS users_app_readonly;
 
-CREATE ROLE users_appowner_user LOGIN
+CREATE ROLE users_app_readonly LOGIN
   NOSUPERUSER INHERIT NOCREATEDB NOCREATEROLE NOREPLICATION;
-ALTER ROLE users_appowner_user
+ALTER ROLE users_app_readonly
   SET search_path = users;
-GRANT users_owner TO users_appowner_user;
-
-DROP ROLE IF EXISTS users_appreadonly_user;
-
-CREATE ROLE users_appreadonly_user LOGIN
-  NOSUPERUSER INHERIT NOCREATEDB NOCREATEROLE NOREPLICATION;
-ALTER ROLE users_appreadonly_user
-  SET search_path = users;
-GRANT users_readonly TO users_appreadonly_user;
+GRANT users_readonly TO users_app_readonly;
