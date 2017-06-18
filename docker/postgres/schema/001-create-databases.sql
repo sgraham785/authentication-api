@@ -28,5 +28,5 @@ CREATE SCHEMA users
   AUTHORIZATION users_owner;
 
 GRANT ALL ON SCHEMA users TO users_owner;
-GRANT USAGE ON SCHEMA users TO users_appuser;
+GRANT USAGE ON SCHEMA users TO users_user;
 GRANT USAGE ON SCHEMA users TO users_readonly;

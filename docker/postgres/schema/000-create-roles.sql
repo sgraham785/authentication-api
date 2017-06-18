@@ -12,7 +12,7 @@ CREATE ROLE users_owner
   NOSUPERUSER INHERIT NOCREATEDB NOCREATEROLE NOREPLICATION;
 
 -- schema user group
-DROP ROLE IF EXISTS users_appuser;
+DROP ROLE IF EXISTS users_user;
 
 CREATE ROLE users_appuser
   NOSUPERUSER INHERIT NOCREATEDB NOCREATEROLE NOREPLICATION;
@@ -26,28 +26,28 @@ CREATE ROLE users_readonly
 
 -- login roles
 
-DROP ROLE IF EXISTS users_usersuser_user;
+DROP ROLE IF EXISTS users_appuser_user;
 
-CREATE ROLE users_usersuser_user LOGIN
+CREATE ROLE users_appuser_user LOGIN
   NOSUPERUSER INHERIT NOCREATEDB NOCREATEROLE NOREPLICATION;
-ALTER ROLE users_usersuser_user
+ALTER ROLE users_appuser_user
   SET search_path = users;
-ALTER ROLE users_usersuser_user
+ALTER ROLE users_appuser_user
   SET bytea_output = 'escape';
-GRANT users_usersuser TO users_usersuser_user;
+GRANT users_user TO users_appuser_user;
 
-DROP ROLE IF EXISTS users_owner_user;
+DROP ROLE IF EXISTS users_appowner_user;
 
-CREATE ROLE users_owner_user LOGIN
+CREATE ROLE users_appowner_user LOGIN
   NOSUPERUSER INHERIT NOCREATEDB NOCREATEROLE NOREPLICATION;
-ALTER ROLE users_owner_user
+ALTER ROLE users_appowner_user
   SET search_path = users;
-GRANT users_owner TO users_owner_user;
+GRANT users_owner TO users_appowner_user;
 
-DROP ROLE IF EXISTS users_readonly_user;
+DROP ROLE IF EXISTS users_appreadonly_user;
 
-CREATE ROLE users_readonly_user LOGIN
+CREATE ROLE users_appreadonly_user LOGIN
   NOSUPERUSER INHERIT NOCREATEDB NOCREATEROLE NOREPLICATION;
-ALTER ROLE users_readonly_user
+ALTER ROLE users_appreadonly_user
   SET search_path = users;
-GRANT users_readonly TO users_readonly_user;
+GRANT users_readonly TO users_appreadonly_user;

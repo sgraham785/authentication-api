@@ -1,5 +1,6 @@
 _old
 .env
 bin
+dist
 node_modules
 npm-debug.log
