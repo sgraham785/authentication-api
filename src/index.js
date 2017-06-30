@@ -35,7 +35,7 @@ const env = process.env.NODE_ENV || 'development'
 export let app = express()
 app.disable('x-powered-by')
 
-app.use(favicon(path.resolve(__dirname, 'views/favicon.ico')))
+app.use(favicon(path.resolve(__dirname, 'public/favicon.ico')))
 
 // ======== *** BODY-PARSER MIDDLEWARE ***
 app.use(
@@ -187,7 +187,7 @@ if (process.env.NODE_ENV === 'development') {
     },
     apis: [
       // Path to the API docs
-      path.resolve(__dirname, 'resources/**/routes.js')
+      path.resolve(__dirname, 'resource/**/routes.js')
     ]
   }
 
@@ -203,7 +203,7 @@ process.env.NODE_ENV === 'development'
   ? app.all('/*')
   : app.all('/v*', authorizeRequest)
 
-let routePaths = convertGlobPaths([path.resolve(__dirname, 'resource/**/routes.js')])
+const routePaths = convertGlobPaths([path.resolve(__dirname, 'resource/**/routes.js')])
 
 router(app, routePaths)
 
