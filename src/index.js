@@ -199,15 +199,9 @@ if (process.env.NODE_ENV === 'development') {
   })
 }
 
-// URI handling
-app.get('/', (request, response) => {
-  response.set('Content-Type', 'application/json')
-  response.status(200).send('Here and healthy!')
-})
-
 process.env.NODE_ENV === 'development'
   ? app.all('/*')
-  : app.all('/*', authorizeRequest)
+  : app.all('/v*', authorizeRequest)
 
 let routePaths = convertGlobPaths([path.resolve(__dirname, 'resource/**/routes.js')])
 
