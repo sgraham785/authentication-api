@@ -4,8 +4,6 @@ import 'dotenv/config'
 import { transporter } from '../../config/mailer'
 const templatesDir = path.resolve(__dirname, '..', 'public/views/mail')
 
-console.log(process.env)
-
 export default (name, data, fn) => {
   // make sure that we have an user email
   if (!data.email || !data.subject) {
