@@ -1,5 +1,5 @@
 import uuid from 'uuid'
-import Model from './model'
+import model from './model'
 import Mailer from '../../middleware/mailer'
 
 // register new login credentials;
@@ -15,7 +15,7 @@ export const register = (req, res) => {
     code: Math.random().toString(36).slice(-8)
   }
 
-  Model.registration(data)
+  model.registration(data)
     .then(user => {
       console.log(user)
       // set email data for mailer
@@ -49,6 +49,34 @@ export const register = (req, res) => {
           'host'
         )}/verify/${data.code}`
       )
+    })
+    .catch(err => {
+      console.error(err)
+      res.status(500).json({ error: true, data: { message: err.message } })
+    })
+}
+
+export const verify = (req, res) => {
+  // Grab ids from URL parameters
+  const code = req.params.code
+
+  model.forge({
+    code
+  })
+    .fetch()
+    // TODO: check if already verified, if it matters
+    .then(verify => {
+      verify.save({ verified: true }, { patch: true }).then(() => {
+        // TODO: send welcome email
+        // redirect to login or set authentication
+        // res.json({error: false, data: {message: 'You\'ve been verified!'}});
+        res.status(200)
+        res.redirect('/signin')
+        // res.json({error: false, data: {message: 'You\'ve been verified!'}});
+      })
+    })
+    .otherwise(err => {
+      res.status(500).json({ error: true, data: { message: err.message } })
     })
     .catch(err => {
       console.error(err)

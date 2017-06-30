@@ -11,6 +11,8 @@ import logger from 'morgan'
 import https from 'https'
 import { } from 'dotenv'
 import swagger from 'swagger-jsdoc'
+import router from './middleware/router'
+import convertGlobPaths from './util/convertGlobPaths'
 import jwtVerify from './middleware/jsonwebtoken/verify'
 import { authorizeRequest } from './middleware/authorization'
 require('./middleware/logger')
@@ -19,7 +21,7 @@ const privateKey = fs.readFileSync('sslcert/server.key', 'utf8')
 const certificate = fs.readFileSync('sslcert/server.crt', 'utf8')
 const credentials = {key: privateKey, cert: certificate}
 
-const host = process.env.SERVER_HOST || '0.0.0.0'
+const host = process.env.SERVER_HOST || 'localhost'
 const port = process.env.SERVER_port || '8443'
 const env = process.env.NODE_ENV || 'development'
 
@@ -173,7 +175,7 @@ if (process.env.NODE_ENV === 'development') {
     })
   )
 }
-
+// TODO: Abtract to ./middleware
 // Setup Swagger on Development
 if (process.env.NODE_ENV === 'development') {
   const swaggerOptions = {
@@ -199,25 +201,17 @@ if (process.env.NODE_ENV === 'development') {
 
 // URI handling
 app.get('/', (request, response) => {
-  response.redirect('/v1')
-})
-
-app.get('/v1', (request, response) => {
   response.set('Content-Type', 'application/json')
   response.status(200).send('Here and healthy!')
 })
 
 process.env.NODE_ENV === 'development'
-  ? app.all('/v1/*')
-  : app.all('/v1/*', authorizeRequest)
+  ? app.all('/*')
+  : app.all('/*', authorizeRequest)
 
-// Register & use declared resource naming
-const resources = fs.readdirSync(path.join(__dirname, 'resources'))
-resources.forEach(resource => {
-  console.log(resource)
-  // API.register(resource)
-  // app.use(API.endpoint(resource))
-})
+let routePaths = convertGlobPaths([path.resolve(__dirname, 'resource/**/routes.js')])
+
+router(app, routePaths)
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {

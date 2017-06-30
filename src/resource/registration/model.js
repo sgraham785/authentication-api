@@ -1,10 +1,10 @@
-import bookshelf from '../configs/db'
 import Promise from 'bluebird'
 import Joi from 'joi'
+import { bookshelf } from '../../middleware/database'
 import hashword from '../../middleware/hashword'
 import schema from './schema'
 
-Promise.promisifyAll(hashword)
+// Promise.promisifyAll(hashword)
 
 export const model = bookshelf.Model.extend(
   {
