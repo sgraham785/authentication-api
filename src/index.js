@@ -10,6 +10,9 @@ import csurf from 'csurf'
 import logger from 'morgan'
 import https from 'https'
 import { } from 'dotenv'
+import { corsOptions } from './middleware/cors'
+import csp from './middleware/csp'
+import { csurfFunc } from './middleware/csurf'
 import { swaggerSpec } from './middleware/swagger'
 import router from './middleware/router'
 import convertGlobPaths from './util/convertGlobPaths'
@@ -66,76 +69,14 @@ app.use(
 )
 
 // ======== *** CORS MIDDLEWARE ***
-// TODO: fix multi origin
-// var corsWhitelist = ['localhost', 'http://example2.com']
-
-// Set CORS
-app.use(
-  cors({
-    origin: '*',
-    methods: ['GET', 'PUT', 'PATCH', 'POST', 'DELETE', 'HEAD'],
-    allowedHeaders: ['Content-type', 'Accept', 'X-Access-Token', 'X-Key'],
-    credentials: true,
-    maxAge: 3600
-  })
-)
+app.use(cors(corsOptions))
 
 // ======== *** SECURITY MIDDLEWARE ***
 app.use(helmet())
-// set CSP
-app.use(
-  helmet.contentSecurityPolicy({
-    directives: {
-      defaultSrc: ["'self'", 'localhost'],
-      scriptSrc: [
-        "'self'",
-        "'unsafe-inline'",
-        "'unsafe-eval'",
-        'ajax.googleapis.com',
-        'www.google-analytics.com'
-      ],
-      styleSrc: ["'self'", "'unsafe-inline'", 'ajax.googleapis.com'],
-      imgSrc: ["'self'", 'data:'],
-      connectSrc: ["'self'"]
-    },
-    // This module will detect common mistakes in your directives and throw errors
-    // if it finds any. To disable this, enable "loose mode".
-    loose: false,
-
-    // Set to true if you only want browsers to report errors, not block them.
-    // You may also set this to a function(req, res) in order to decide dynamically
-    // whether to use reportOnly mode, e.g., to allow for a dynamic kill switch.
-    reportOnly: false,
-
-    // Set to true if you want to blindly set all headers: Content-Security-Policy,
-    // X-WebKit-CSP, and X-Content-Security-Policy.
-    setAllHeaders: false,
-
-    // Set to true if you want to disable CSP on Android where it can be buggy.
-    disableAndroid: false,
-
-    // Set to false if you want to completely disable any user-agent sniffing.
-    // This may make the headers less compatible but it will be much faster.
-    // This defaults to `true`.
-    browserSniff: true
-  })
-)
+app.use(helmet.contentSecurityPolicy(csp))
 
 // ======== *** CSURF MIDDLEWARE ***
-const valueFunction = req => {
-  const result =
-    (req.body && req.body._csrf) ||
-    (req.query && req.query._csrf) ||
-    (req.cookies && req.cookies['XSRF-TOKEN']) ||
-    req.headers['csrf-token'] ||
-    req.headers['xsrf-token'] ||
-    req.headers['x-csrf-token'] ||
-    req.headers['x-xsrf-token']
-
-  return result
-}
-// set CSURF
-app.use(csurf({value: valueFunction}))
+app.use(csurf({ value: csurfFunc }))
 
 app.use((req, res, next) => {
   res.cookie('XSRF-TOKEN', req.csrfToken())
@@ -143,8 +84,7 @@ app.use((req, res, next) => {
   next()
 })
 
-// error handlers
-
+// ======== *** ERROR HANDLER MIDDLEWARE ***
 // development error handler
 // will print stacktrace
 if (process.env.NODE_ENV === 'development') {
