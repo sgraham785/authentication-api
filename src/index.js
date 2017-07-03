@@ -10,7 +10,7 @@ import csurf from 'csurf'
 import logger from 'morgan'
 import https from 'https'
 import { } from 'dotenv'
-import swagger from 'swagger-jsdoc'
+import { swaggerSpec } from './middleware/swagger'
 import router from './middleware/router'
 import convertGlobPaths from './util/convertGlobPaths'
 import jwtVerify from './middleware/jsonwebtoken/verify'
@@ -72,7 +72,7 @@ app.use(
 // Set CORS
 app.use(
   cors({
-    origin: host,
+    origin: '*',
     methods: ['GET', 'PUT', 'PATCH', 'POST', 'DELETE', 'HEAD'],
     allowedHeaders: ['Content-type', 'Accept', 'X-Access-Token', 'X-Key'],
     credentials: true,
@@ -175,27 +175,12 @@ if (process.env.NODE_ENV === 'development') {
     })
   )
 }
-// TODO: Abtract to ./middleware
-// Setup Swagger on Development
+
+// Setup Swagger in Development
 if (process.env.NODE_ENV === 'development') {
-  const swaggerOptions = {
-    swaggerDefinition: {
-      info: {
-        title: 'Authentication API', // Title (required)
-        version: '1.0.0' // Version (required)
-      }
-    },
-    apis: [
-      // Path to the API docs
-      path.resolve(__dirname, 'resource/**/routes.js')
-    ]
-  }
-
-  const swaggerSpec = swagger(swaggerOptions)
-
-  app.get('/api-docs.json', (request, response) => {
-    response.setHeader('Content-Type', 'application/json')
-    response.send(swaggerSpec)
+  app.get('/api-docs.json', (req, res) => {
+    res.setHeader('Content-Type', 'application/json')
+    res.send(swaggerSpec)
   })
 }
 

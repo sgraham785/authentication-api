@@ -3,3 +3,7 @@ logs
 node_modules
 sslcerts
 npm-debug.log
+.gitignore
+Dockerfile
+Makefile
+README.md

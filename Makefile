@@ -7,6 +7,9 @@ else
   export IMAGE_NAME=${IMAGE}
 endif
 $(shell echo IMAGE_NAME=${IMAGE_NAME} > .env)
+# This works on Mac. Export the local IP address at build time
+$(shell echo HOST_IP="$(shell ipconfig getifaddr en0)" >> .env)
+
 
 help:
 	@echo
@@ -42,13 +45,13 @@ build:	clean
 build-deps:
 	sudo docker build -f docker/postgres/Dockerfile -t $(IMAGE_NAME)-pgdb1 ./
 	sudo docker build -f docker/redis/Dockerfile -t $(IMAGE_NAME)-redisdb1 ./
-	sudo docker build -f docker/swagger/Dockerfile -t $(IMAGE_NAME)-swagger1 ./
+	sudo docker build -f docker/swagger-ui/Dockerfile -t $(IMAGE_NAME)-swagger-ui1 ./
 build-dev:	build build-deps
 	sudo docker-compose -f docker/dev.yml up -d app
 up-dev:	down
-	sudo docker-compose -f docker/dev.yml up -d app
+	sudo docker-compose -f docker/dev.yml up -d --remove-orphans
 up:	down
-	sudo docker-compose -f docker/up.yml up -d --remove-orphans app
+	sudo docker-compose -f docker/up.yml up -d --remove-orphans
 down:
 	sudo docker-compose -f docker/dev.yml down
 test:	down
