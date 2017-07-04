@@ -22,7 +22,7 @@ require('./middleware/logger')
 
 const privateKey = fs.readFileSync('sslcert/server.key', 'utf8')
 const certificate = fs.readFileSync('sslcert/server.crt', 'utf8')
-const credentials = {key: privateKey, cert: certificate}
+const credentials = { key: privateKey, cert: certificate }
 
 const host = process.env.SERVER_HOST || 'localhost'
 const port = process.env.SERVER_port || '8443'
@@ -33,12 +33,15 @@ const env = process.env.NODE_ENV || 'development'
  * - Validate request is from https
  * - Validate authorized request
  * - Set session & JWT to REDIS
+ * - Fix logging
  */
 
 export let app = express()
 app.disable('x-powered-by')
 
-app.use(favicon(path.resolve(__dirname, 'public/favicon.ico')))
+app.use(favicon(path.resolve(__dirname, '../public/favicon.ico')))
+app.set('view engine', 'pug')
+app.set('views', path.join(__dirname, '../public/views'))
 
 // ======== *** BODY-PARSER MIDDLEWARE ***
 app.use(
@@ -111,7 +114,7 @@ if (process.env.NODE_ENV === 'development') {
       skip (req, res) {
         return res.statusCode < 400
       },
-      stream: path.resolve(__dirname, '/../app_errors.log')
+      stream: path.resolve(__dirname, '../app_errors.log')
     })
   )
 }

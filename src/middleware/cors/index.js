@@ -1,10 +1,13 @@
-const originWhitelist = ['localhost', '0.0.0.0']
+const originWhitelist = [
+  'http://localhost:8080' // swagger-ui
+]
 
 const origin = (origin, callback) => {
-  if (originWhitelist.includes(origin)) {
+  // console.log(origin)
+  if (originWhitelist.includes(origin) || !origin) {
     callback(null, true)
   } else {
-    callback(new Error('Not allowed by CORS'))
+    callback(new Error(`${origin} is not allowed by CORS`))
   }
 }
 
