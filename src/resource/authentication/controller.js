@@ -6,6 +6,11 @@ import model from './model'
 
 // get JWT token for login credentials
 export const login = (req, res) => {
+  console.log(req)
+  if (!req.body.email || !req.body.password) {
+    return res.status(400)
+      .json({ error: true, data: { message: 'You must provide email, password and name' } })
+  }
   const data = {
     email: req.body.email,
     password: req.body.password
@@ -31,7 +36,7 @@ export const login = (req, res) => {
     })
     .catch(model.NotFoundError, () => {
       res
-        .status(400)
+        .status(422)
         .json({ error: true, data: { message: `${data.email} not found` } })
     })
     .catch(err => {

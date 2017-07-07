@@ -1,8 +1,10 @@
 import fs from 'fs'
 import path from 'path'
 import express from 'express'
+import redis from 'redis'
 import favicon from 'serve-favicon'
-import session from 'express-session'
+import cookieSession from 'express-session'
+import jwtSession from 'jwt-redis-session'
 import bodyParser from 'body-parser'
 import cors from 'cors'
 import helmet from 'helmet'
@@ -57,17 +59,26 @@ app.use(
 )
 
 // ======== *** SESSION MIDDLEWARE ***
-// TODO: implement session store:
-// https://www.npmjs.com/package/connect-session-knex
-// https://www.npmjs.com/package/connect-redis
 app.use(
-  session({
+  cookieSession({
     secret: process.env.SESSION_SECRET,
     // store: ,
     resave: false,
     saveUninitialized: true,
     expires: new Date(Date.now() + 3600000), // 1 Hour
     cookie: {httpOnly: true, secure: true}
+  })
+)
+
+app.use(
+  jwtSession({
+    client: redis.createClient({ host: 'redis' }),
+    secret: process.env.SESSION_SECRET,
+    keyspace: 'sess:',
+    maxAge: 86400,
+    algorithm: 'HS256',
+    requestKey: 'jwtSession',
+    requestArg: 'jwtToken'
   })
 )
 
@@ -78,13 +89,40 @@ app.use(cors(corsOptions))
 app.use(helmet())
 app.use(helmet.contentSecurityPolicy(csp))
 
+// TODO: remove CSURF, no point if only JSON api
 // ======== *** CSURF MIDDLEWARE ***
-app.use(csurf({ value: csurfFunc }))
+if (process.env.NODE_ENV !== 'development') {
+  app.use(csurf({ value: csurfFunc }))
 
+  app.use((req, res, next) => {
+    res.cookie('XSRF-TOKEN', req.csrfToken())
+    res.locals.csrftoken = req.csrfToken()
+    next()
+  })
+}
+
+// ======== *** SWAGGER JSDOC MIDDLEWARE ***
+if (process.env.NODE_ENV === 'development') {
+  app.get('/api-docs.json', (req, res) => {
+    res.setHeader('Content-Type', 'application/json')
+    res.send(swaggerSpec)
+  })
+}
+
+// ======== *** SETUP RESOURCE ROUTING ***
+process.env.NODE_ENV === 'development'
+  ? app.all('/*')
+  : app.all('/v*', authorizeRequest)
+
+const routePaths = convertGlobPaths([path.resolve(__dirname, 'resource/**/routes.js')])
+
+router(app, routePaths)
+
+// catch 404 and forward to error handler
 app.use((req, res, next) => {
-  res.cookie('XSRF-TOKEN', req.csrfToken())
-  res.locals.csrftoken = req.csrfToken()
-  next()
+  const err = new Error('Not Found')
+  err.status = 404
+  next(err)
 })
 
 // ======== *** ERROR HANDLER MIDDLEWARE ***
@@ -118,29 +156,6 @@ if (process.env.NODE_ENV === 'development') {
     })
   )
 }
-
-// Setup Swagger in Development
-if (process.env.NODE_ENV === 'development') {
-  app.get('/api-docs.json', (req, res) => {
-    res.setHeader('Content-Type', 'application/json')
-    res.send(swaggerSpec)
-  })
-}
-
-process.env.NODE_ENV === 'development'
-  ? app.all('/*')
-  : app.all('/v*', authorizeRequest)
-
-const routePaths = convertGlobPaths([path.resolve(__dirname, 'resource/**/routes.js')])
-
-router(app, routePaths)
-
-// catch 404 and forward to error handler
-app.use((req, res, next) => {
-  const err = new Error('Not Found')
-  err.status = 404
-  next(err)
-})
 
 app = https.createServer(credentials, app)
 app.listen(port, host)

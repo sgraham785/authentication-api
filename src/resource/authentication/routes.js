@@ -13,17 +13,10 @@ export const v1 = {
      *     properties:
      *       email:
      *         type: string
+     *         example: example@email.com
      *       password:
      *         type: string
-     *       path:
-     *         type: string
-     */
-
-    /**
-     * @swagger
-     * tags:
-     *   name: Users
-     *   description: User management and login
+     *         example: s3cur3Pa$$word
      */
 
     /**
@@ -37,25 +30,35 @@ export const v1 = {
 
     /**
      * @swagger
-     * /login:
+     * /v1/authentication/login:
      *   post:
      *     description: Login to the application
-     *     tags: [Users, Login]
+     *     consumes:
+     *       - application/json
      *     produces:
      *       - application/json
      *     parameters:
-     *       - $ref: '#/parameters/email'
-     *       - name: password
-     *         description: User's password.
-     *         in: formData
+     *       - name: email
+     *         description: Email to use for login.
+     *         in: body
      *         required: true
      *         type: string
+     *         schema:
+     *           $ref: '#/definitions/Login/properties/email'
+     *       - name: password
+     *         description: User's password.
+     *         in: body
+     *         required: true
+     *         type: string
+     *         schema:
+     *           $ref: '#/definitions/Login/properties/password'
      *     responses:
      *       200:
-     *         description: login
-     *         schema:
-     *           type: object
-     *           $ref: '#/definitions/Login'
+     *         description: Successful login
+     *       400:
+     *         description: Email or Password not in body
+     *       422:
+     *         description: User email not found
      */
     '/login': login,
     '/logout': login
