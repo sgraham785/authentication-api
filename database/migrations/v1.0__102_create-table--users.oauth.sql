@@ -1,6 +1,6 @@
 SET search_path = users;
 
-CREATE TABLE oauth(
+CREATE TABLE oauth (
   id bigserial NOT NULL PRIMARY KEY,
   uuid uuid REFERENCES auth,
   provider text NOT NULL,

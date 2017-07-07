@@ -7,12 +7,12 @@ import Mailer from '../../middleware/mailer'
 export const register = (req, res) => {
   // Set data for insertion
   const data = {
-    id: uuid.v4(),
+    uuid: uuid.v4(),
     first_name: req.body.first_name,
     last_name: req.body.last_name,
     email: req.body.email,
     password: req.body.password,
-    code: Math.random().toString(36).slice(-8)
+    email_code: Math.random().toString(36).slice(-8)
   }
 
   model.registration(data)
