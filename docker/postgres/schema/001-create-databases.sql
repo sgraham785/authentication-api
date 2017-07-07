@@ -1,8 +1,8 @@
 -- database
-DROP DATABASE IF EXISTS daily_scrum;
+DROP DATABASE IF EXISTS auth;
 
-CREATE DATABASE daily_scrum
-  WITH OWNER = daily_scrum_database_owner
+CREATE DATABASE auth
+  WITH OWNER = auth_database_owner
        ENCODING = 'UTF8'
        TABLESPACE = pg_default
      -- for Linux
@@ -15,7 +15,7 @@ CREATE DATABASE daily_scrum
 
 
 -- connect to db
-\c daily_scrum;
+\c auth;
 
 -- time zone setup
 SET timezone TO 'UTC';
