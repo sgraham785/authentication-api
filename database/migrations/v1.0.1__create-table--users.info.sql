@@ -2,7 +2,7 @@ SET search_path = users;
 
 CREATE TABLE info (
     id bigserial NOT NULL,
-    uuid text PRIMARY KEY REFERENCES auth,
+    uuid uuid PRIMARY KEY REFERENCES auth (uuid) ON DELETE CASCADE,
     first_name text,
     last_name text,
     preferred_username text,
@@ -35,7 +35,6 @@ USING btree
   uuid ASC NULLS LAST
 );
 
-ALTER TABLE users.info ADD CONSTRAINT info_uuid_fkey FOREIGN KEY (uuid)
-REFERENCES users.auth (uuid) MATCH FULL
-DEFERRABLE INITIALLY IMMEDIATE
-ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE users.info 
+ALTER CONSTRAINT info_uuid_fkey
+DEFERRABLE INITIALLY IMMEDIATE; 

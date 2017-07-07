@@ -1,9 +1,9 @@
 -- This file contains all the commands to create the database and schema roles
 
 -- database owner group
-DROP ROLE IF EXISTS auth_database_owner;
+DROP ROLE IF EXISTS profiles_database_owner;
 
-CREATE ROLE auth_database_owner;
+CREATE ROLE profiles_database_owner;
 
 -- schema owner group
 DROP ROLE IF EXISTS users_owner;

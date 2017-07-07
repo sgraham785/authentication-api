@@ -1,8 +1,8 @@
 -- database
-DROP DATABASE IF EXISTS auth;
+DROP DATABASE IF EXISTS profiles;
 
-CREATE DATABASE auth
-  WITH OWNER = auth_database_owner
+CREATE DATABASE profiles
+  WITH OWNER = profiles_database_owner
        ENCODING = 'UTF8'
        TABLESPACE = pg_default
      -- for Linux
@@ -15,7 +15,7 @@ CREATE DATABASE auth
 
 
 -- connect to db
-\c auth;
+\c profiles;
 
 -- time zone setup
 SET timezone TO 'UTC';
