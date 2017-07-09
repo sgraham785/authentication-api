@@ -1,18 +1,19 @@
-import bcrypt from 'bcryptjs'
+import bcrypt from 'bcryptjs-then'
 
-export const encrypt = (text, callback) => {
-  bcrypt.genSalt(10, (err, salt) => {
-    if (err) return callback(err)
-
-    bcrypt.hash(text, salt, (err, hashed) => callback(err, hashed))
+export const encrypt = (text) => {
+  console.log(text)
+  return bcrypt.hash(text, 10).then(hash => {
+    console.log(`hashed --> ${hash}`)
+    return hash
+  }).catch(err => {
+    console.error(JSON.stringify(err))
   })
 }
 
-export const compare = (text, hashed, callback) => {
-  bcrypt.compare(text, hashed, (err, isMatch) => {
-    if (err) {
-      return callback(err)
-    }
-    return callback(null, isMatch)
+export const compare = (text, hash) => {
+  bcrypt.compare(text, hash).then(valid => {
+    return valid
+  }).catch(err => {
+    console.error(JSON.stringify(err))
   })
 }

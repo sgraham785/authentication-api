@@ -1,8 +1,9 @@
 import path from 'path'
+import { } from 'dotenv'
 import emailTemplates from 'email-templates'
-import 'dotenv/config'
 import { transporter } from '../../config/mailer'
-const templatesDir = path.resolve(__dirname, '..', 'public/views/mail')
+
+const templatesDir = path.resolve(__dirname, '../../..', 'public/views/mail')
 
 export default (name, data, fn) => {
   // make sure that we have an user email
@@ -28,8 +29,7 @@ export default (name, data, fn) => {
         process.env.NODE_ENV === 'development'
       ) {
         console.log(`Email Sent! :: ${html}`)
-        fn(null, '250 2.0.0 OK 1350452502 s5sm19782310obo.10', html, text)
-        return
+        return fn(null, '250 2.0.0 OK 1350452502 s5sm19782310obo.10', html, text)
       }
 
       transporter.sendMail(

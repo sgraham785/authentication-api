@@ -35,8 +35,7 @@ export const login = (req, res) => {
       // res.redirect('/todos');
     })
     .catch(model.NotFoundError, () => {
-      res
-        .status(422)
+      res.status(422)
         .json({ error: true, data: { message: `${data.email} not found` } })
     })
     .catch(err => {

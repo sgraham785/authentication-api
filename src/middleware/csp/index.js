@@ -1,6 +1,6 @@
 export default {
   directives: {
-    defaultSrc: ["'self'", 'localhost'],
+    defaultSrc: ["'self'", 'localhost', '0.0.0.0'],
     scriptSrc: [
       "'self'",
       "'unsafe-inline'",
