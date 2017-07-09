@@ -2,7 +2,6 @@ import uuid from 'uuid'
 import Promise from 'bluebird'
 import Joi from 'joi'
 import bcrypt from 'bcryptjs-then'
-import jwtSession from 'jwt-redis-session'
 import { Auth, Info } from '../../models/users'
 import schema from './schema'
 import Mailer from '../../middleware/mailer'
@@ -11,7 +10,6 @@ let validate = Promise.promisify(Joi.validate)
 /**
  * TODOS:
  * - better error handleing in each step of promise
- * - set session on success
  */
 
 // register new login credentials;
@@ -81,10 +79,8 @@ export const registration = Promise.method((req, res) => {
             if (err) console.error(`Set Token err --> ${err}`)
             res.status(200).send({ error: false, data: { token: token } })
           })
-
-          console.log(`jwtSession --> ${JSON.stringify(req.jwtSession)}`)
         }, err => {
-          // This will block verification email from going
+          // This will block verification email from going on SQL insert error
           console.error(`Registration Insert err--> ${JSON.stringify(err)}`)
           return res.status(422)
             .send({ error: true, data: { message: 'Unable to create profile' } })

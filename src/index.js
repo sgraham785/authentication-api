@@ -12,6 +12,9 @@ import csurf from 'csurf'
 import logger from 'morgan'
 import https from 'https'
 import { } from 'dotenv'
+import Oy from 'oy-vey'
+import React from 'react'
+import VerificationEmail from './views/email/templates/verification'
 import { corsOptions } from './middleware/cors'
 import csp from './middleware/csp'
 import { csurfFunc } from './middleware/csurf'
@@ -66,7 +69,7 @@ app.use(
     resave: false,
     saveUninitialized: true,
     expires: new Date(Date.now() + 3600000), // 1 Hour
-    cookie: {httpOnly: true, secure: true}
+    cookie: { httpOnly: true, secure: true }
   })
 )
 
@@ -106,6 +109,22 @@ if (process.env.NODE_ENV === 'development') {
   app.get('/api-docs.json', (req, res) => {
     res.setHeader('Content-Type', 'application/json')
     res.send(swaggerSpec)
+  })
+}
+
+// ======== *** EMAIL VIEWS ***
+if (process.env.NODE_ENV === 'development') {
+  app.get('/email/verification', (req, res) => {
+    const html = Oy.renderTemplate(<VerificationEmail />, {
+      title: 'This is an example',
+      previewText: 'This is an example',
+      bgColor: '#f7f7f7'
+    })
+
+    res.set('Cache-Control', 'no-cache, no-store, must-revalidate')
+    res.set('Pragma', 'no-cache')
+    res.set('Expires', '0')
+    res.send(html)
   })
 }
 

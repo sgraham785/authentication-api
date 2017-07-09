@@ -1,4 +1,4 @@
-import 'dotenv/config'
+import { } from 'dotenv'
 import nodemailer from 'nodemailer'
 
 // create reusable transporter object using SMTP transport
