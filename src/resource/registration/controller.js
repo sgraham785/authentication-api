@@ -10,10 +10,9 @@ import Mailer from '../../middleware/mailer'
 let validate = Promise.promisify(Joi.validate)
 /**
  * TODOS:
- * - better error handeling in each step of Promise
  */
 
-// register new login credentials;
+// register new profile;
 // curl -k -H "Content-Type: application/json" -X POST -d '{"first_name":"John","last_name":"Smith", "email":"example@email.com","password":"s3cur3Pa$$word"}' https://0.0.0.0:8443/v1/registration
 export const registration = Promise.method((req, res) => {
   if (!req.body) throw new Error('No data to process')
@@ -57,6 +56,10 @@ export const registration = Promise.method((req, res) => {
               last_name: data.last_name,
               email_code: data.email_code
             })
+        }, err => {
+          console.error(`Hashing err--> ${JSON.stringify(err)}`)
+          return res.status(422)
+            .send({ error: true, data: { message: 'Something went wrong hashing' } })
         })
         .then(() => {
           // Build session data object
@@ -114,30 +117,37 @@ export const registration = Promise.method((req, res) => {
     })
 })
 
-export const verify = (req, res) => {
-  // Grab ids from URL parameters
-  const code = req.params.code
+/**
+ * TODOS:
+ * - parse path
+ * - validate timestamp not older that 30 days
+ * - fetch profile with email_code
+ * - update to verified
+ * - document route definition
+ */
+export const verifyEmail = (req, res) => {
+  // Build params object
+  let data = {
+    timestamp: req.params.timestamp,
+    email_code: req.params.email_code
+  }
+  let maxTimestamp = data.timestamp + (30 * 24 * 60 * 60 * 1000)
+  let nowTimestamp = Math.round(Date.now() / 1000)
 
-  Info.forge({
-    code
+  if (nowTimestamp > maxTimestamp) return new Error('Link is greater than 30 days old')
+
+  Info.findOne({
+    email_code: data.email_code
   })
-    .fetch()
-    // TODO: check if already verified, if it matters
-    .then(verify => {
-      verify.save({ verified: true }, { patch: true }).then(() => {
-        // TODO: send welcome email
-        // redirect to login or set authentication
-        // res.json({error: false, data: {message: 'You\'ve been verified!'}});
-        res.status(200)
-        res.redirect('/signin')
-        // res.json({error: false, data: {message: 'You\'ve been verified!'}});
+  .then(verify => {
+    return verify.save({ email_verified: true }, { patch: true, require: true })
+      .then(() => {
+        res.status(200).send({ error: false, data: { message: 'You\'ve been verified!' } })
       })
-    })
-    .otherwise(err => {
-      res.status(500).json({ error: true, data: { message: err.message } })
-    })
-    .catch(err => {
-      console.error(err)
-      res.status(500).json({ error: true, data: { message: err.message } })
-    })
+    // TODO: send welcome email
+  })
+  .catch(err => {
+    console.error(err)
+    res.status(500).json({ error: true, data: { message: err.message } })
+  })
 }

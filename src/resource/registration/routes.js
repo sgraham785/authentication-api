@@ -1,4 +1,4 @@
-import { registration, verify } from './controller'
+import { registration, verifyEmail } from './controller'
 
 export const v1 = {
   post: {
@@ -62,6 +62,58 @@ export const v1 = {
      *         description: User email not found
      */
     '/': registration,
-    '/verify': verify
+    /**
+     * @swagger
+     * definitions:
+     *   VerifyEmail:
+     *     required:
+     *       - timestamp
+     *       - email_code
+     *     properties:
+     *       timestamp:
+     *         type: string
+     *         example: 1499647625
+     *       email_code:
+     *         type: string
+     *         example: 70ug5czfw2ltbj4i
+     */
+
+    /**
+     * @swagger
+     * tags:
+     *   - registration
+     *   - email
+     *   - verification
+     */
+
+    /**
+     * @swagger
+     * /v1/registration/verify/{timestamp}/{email_code}:
+     *   post:
+     *     description: Verify link emailed to a user
+     *     produces:
+     *       - application/json
+     *     parameters:
+     *       - name: timestamp
+     *         description: Generated timestamp, must be less then 30 day old.
+     *         in: path
+     *         required: true
+     *         type: string
+     *         schema:
+     *           $ref: '#/definitions/Email_Verification/properties/timestamp'
+     *       - name: email_code
+     *         description: Generated email code.
+     *         in: path
+     *         required: true
+     *         type: string
+     *         schema:
+     *           $ref: '#/definitions/Email_Verification/properties/email_code'
+     *     responses:
+     *       200:
+     *         description: Successful email verification
+     *       422:
+     *         description: User not found
+     */
+    '/verify/:timestamp/:email_code': verifyEmail
   }
 }
