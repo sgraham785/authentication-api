@@ -37,7 +37,6 @@ const env = process.env.NODE_ENV || 'development'
  * TODOs:
  * - Validate request is from https
  * - Validate authorized request
- * - Set session & JWT to REDIS
  * - Fix logging
  */
 
@@ -45,21 +44,12 @@ export let app = express()
 app.disable('x-powered-by')
 
 app.use(favicon(path.resolve(__dirname, '../public/favicon.ico')))
+// Setup Pug view engine for error pages
 app.set('view engine', 'pug')
 app.set('views', path.join(__dirname, '../public/views'))
 
 // ======== *** BODY-PARSER MIDDLEWARE ***
-app.use(
-  bodyParser.urlencoded({
-    extended: false,
-    type: 'application/x-www-form-urlencoded'
-  })
-)
-app.use(
-  bodyParser.json({
-    type: ['application/json', 'application/vnd.api+json']
-  })
-)
+app.use(bodyParser.json({ type: ['application/json'] }))
 
 // ======== *** SESSION MIDDLEWARE ***
 app.use(
@@ -76,6 +66,7 @@ app.use(
 app.use(
   jwtSession({
     client: redis.createClient({ host: 'redis' }),
+    // TODO: use ssl cert instead of secret string
     secret: process.env.SESSION_SECRET,
     keyspace: 'sess:',
     maxAge: 86400,
@@ -112,7 +103,7 @@ if (process.env.NODE_ENV === 'development') {
   })
 }
 
-// ======== *** EMAIL VIEWS ***
+// ======== *** EMAIL VIEW ROUTES ***
 if (process.env.NODE_ENV === 'development') {
   app.get('/email/verification', (req, res) => {
     const html = Oy.renderTemplate(<VerificationEmail />, {

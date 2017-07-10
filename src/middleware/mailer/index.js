@@ -16,7 +16,7 @@ export default (name, data, fn) => {
       // if we are testing don't send out an email instead return
       // success and the html and txt strings for inspection
   if (process.env.NODE_ENV === 'development') {
-    console.log(`Email Sent! :: ${html}`)
+    console.log(`Email Sent! :: ${text}`)
     return fn(null, '250 2.0.0 OK 1350452502 s5sm19782310obo.10', html, text)
   }
 

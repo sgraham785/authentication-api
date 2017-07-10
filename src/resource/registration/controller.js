@@ -6,10 +6,11 @@ import { Auth, Info } from '../../models/users'
 import schema from './schema'
 import Mailer from '../../middleware/mailer'
 
+// Make schema validation a Promise
 let validate = Promise.promisify(Joi.validate)
 /**
  * TODOS:
- * - better error handleing in each step of promise
+ * - better error handeling in each step of Promise
  */
 
 // register new login credentials;
@@ -23,9 +24,8 @@ export const registration = Promise.method((req, res) => {
     last_name: req.body.last_name,
     email: req.body.email,
     password: req.body.password,
-    email_code: Math.random().toString(36).slice(-8)
+    email_code: Math.random().toString(36).slice(-16)
   }
-  console.log(`jwtSession --> ${JSON.stringify(req.jwtSession)}`)
 
   validate(data, schema)
     .then(valid => {
@@ -37,9 +37,9 @@ export const registration = Promise.method((req, res) => {
         return data
       })
     }, err => {
-      console.error(`err--> ${JSON.stringify(err)}`)
+      console.error(`Registration Validation err--> ${JSON.stringify(err)}`)
       return res.status(422)
-        .send({ error: true, data: { message: 'Something went wrong hashing' } })
+        .send({ error: true, data: { message: 'Please fill in all required fields' } })
     })
     .then(data => {
       return Auth
@@ -49,7 +49,6 @@ export const registration = Promise.method((req, res) => {
           password: data.password
         },
         { method: 'insert' })
-        // .timeout(50) // not best option
         .then(() => {
           return Info
             .create({
@@ -87,22 +86,24 @@ export const registration = Promise.method((req, res) => {
           // TODO: should delete inserted Auth record is error on Info insert, beware of email unique though, don't want to delete existing user
         })
         .then(() => {
+          let timestamp = Math.round(Date.now() / 1000)
+          // TODO: set this to a webpage
+          let link = `https://${req.get('host')}/v1/registration/verify/${timestamp}/${data.email_code}`
           // Build mail object
           const mail = {
             email: data.email,
             subject: 'Please Verify Your Email',
             name: `${data.first_name} ${data.last_name}`,
-            link: `http://${req.get('host')}/verify/${data.email_code}`
+            link
           }
 
-          return Mailer('verify_registration', mail, (err, message) => {
-            console.error(`err --> ${err}`)
+          return Mailer('VerificationEmail', mail, (err, message) => {
             if (err) res.status(422).send('There was an error sending the email')
             return message
           })
         })
         .catch(err => {
-          console.error(`err --> ${err}`)
+          console.error(`CatchAll err --> ${err}`)
           return res.status(422)
             .send({ error: true, data: { message: 'Insert error' } })
         })
@@ -117,7 +118,7 @@ export const verify = (req, res) => {
   // Grab ids from URL parameters
   const code = req.params.code
 
-  model.forge({
+  Info.forge({
     code
   })
     .fetch()
