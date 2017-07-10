@@ -10,12 +10,15 @@ import Mailer from '../../middleware/mailer'
 let validate = Promise.promisify(Joi.validate)
 /**
  * TODOS:
+ * - Delete inserted record or try again is Auth insert fails
  */
 
-// register new profile;
-// curl -k -H "Content-Type: application/json" -X POST -d '{"first_name":"John","last_name":"Smith", "email":"example@email.com","password":"s3cur3Pa$$word"}' https://0.0.0.0:8443/v1/registration
+/**
+ * Register new profile
+ * Example: curl -k -H "Content-Type: application/json" -X POST -d '{"first_name":"John","last_name":"Smith", "email":"example@email.com","password":"s3cur3Pa$$word"}' https://0.0.0.0:8443/v1/registration
+ */
 export const registration = Promise.method((req, res) => {
-  if (!req.body) throw new Error('No data to process')
+  if (!req.body) return res.status(422).send({ error: true, data: { message: 'Missing request body' } })
   // Build data object
   const data = {
     uuid: uuid.v4(),
@@ -119,11 +122,12 @@ export const registration = Promise.method((req, res) => {
 
 /**
  * TODOS:
- * - parse path
- * - validate timestamp not older that 30 days
- * - fetch profile with email_code
- * - update to verified
- * - document route definition
+ * - maybe send a welcome email
+ */
+
+/**
+ * Verify registered email
+ * Example: curl -X POST "https://0.0.0.0:8443/v1/registration/verify/1499647625/70ug5czfw2ltbj4i" -H "accept: application/json"
  */
 export const verifyEmail = (req, res) => {
   // Build params object
@@ -134,7 +138,7 @@ export const verifyEmail = (req, res) => {
   let maxTimestamp = data.timestamp + (30 * 24 * 60 * 60 * 1000)
   let nowTimestamp = Math.round(Date.now() / 1000)
 
-  if (nowTimestamp > maxTimestamp) return new Error('Link is greater than 30 days old')
+  if (nowTimestamp > maxTimestamp) return res.status(422).send({ error: true, data: { message: 'Verification link is outdated' } })
 
   Info.findOne({
     email_code: data.email_code
@@ -144,7 +148,7 @@ export const verifyEmail = (req, res) => {
       .then(() => {
         res.status(200).send({ error: false, data: { message: 'You\'ve been verified!' } })
       })
-    // TODO: send welcome email
+    // TODO: send welcome email?
   })
   .catch(err => {
     console.error(err)

@@ -1,45 +1,38 @@
+import bcrypt from 'bcryptjs-then'
 import Promise from 'bluebird'
-import model from './model'
+import { Auth, Info } from '../../models/users'
 
-// const app = require('express')()
-// const Encrypt = Promise.promisifyAll(require('../models/Encrypt'))
-
-// get JWT token for login credentials
 export const login = (req, res) => {
-  console.log(req)
-  if (!req.body.email || !req.body.password) {
-    return res.status(400)
-      .json({ error: true, data: { message: 'You must provide email, password and name' } })
-  }
+  if (!req.body.email || !req.body.password) return res.status(400).send({ error: true, data: { message: 'You must provide an email and password' } })
+
   const data = {
     email: req.body.email,
     password: req.body.password
   }
 
-  model.login(data.email, data.password)
+  Auth.findOne({
+    email: data.email
+  })
     .then(user => {
-      // remove sensitive info from JWT
-      // delete user.attributes.email;
-      delete user.get('password')
-
-      // create JWT
-      jwt.sign({ user }, (err, token) => {
-        if (err) {
-          return res.status(500).send({ status: 500, message: err.message })
-        }
-        return res.send({ token })
+      console.log(`data.password --> ${data.password}`)
+    console.log(`user.password --> ${user.password}`)  
+    return bcrypt.compare(data.password, user.password)
+      .then(valid => {
+        return res.send(`valid --> ${valid}`)
+      // set session
+      }, err => {
+        console.error(`Login err--> ${JSON.stringify(err)}`)
+        return res.status(422)
+          .send({ error: true, data: { message: 'Profile can not be validated' } })
       })
-
-      // TODO: redirect to todo index
-      // res.status(200);
-      // res.redirect('/todos');
-    })
-    .catch(model.NotFoundError, () => {
-      res.status(422)
-        .json({ error: true, data: { message: `${data.email} not found` } })
-    })
-    .catch(err => {
-      console.error(err)
-      res.status(500).json({ error: true, data: { message: err.message } })
-    })
+    // return res.status(400).send({ error: false, data: { message: user } })
+  })
+  .catch(Auth.NotFoundError, () => {
+    res.status(422)
+      .send({ error: true, data: { message: 'Profile not found' } })
+  })
+  .catch(err => {
+    console.error(err)
+    res.status(500).send({ error: true, data: { message: err.message } })
+  })
 }
