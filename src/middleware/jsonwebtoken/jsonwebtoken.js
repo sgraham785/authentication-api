@@ -1,16 +1,9 @@
-const jwt = (module.exports = {})
-
 import fs from 'fs'
-import path from 'path'
 import jsonwebtoken from 'jsonwebtoken'
-const privateKey = fs.readFileSync(
-  path.join(__dirname, '../../sslcerts/jwt.key'),
-  'utf8'
-)
-const certificate = fs.readFileSync(
-  path.join(__dirname, '../../sslcerts/jwt.crt'),
-  'utf8'
-)
+const privateKey = fs.readFileSync('./pem/jwt.key', 'utf8')
+const certificate = fs.readFileSync('./pem/jwt.crt', 'utf8')
+
+export const jwt = (module.exports = {})
 
 jwt.verify = token => jsonwebtoken.verify(token, certificate)
 jwt.sign = data => {

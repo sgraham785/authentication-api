@@ -15,19 +15,21 @@ import { } from 'dotenv'
 import Oy from 'oy-vey'
 import React from 'react'
 import VerificationEmail from './views/email/templates/verification'
-import { corsOptions } from './middleware/cors'
-import csp from './middleware/csp'
+import { corsOptions } from './config/cors'
+import csp from './config/csp'
 import { csurfFunc } from './middleware/csurf'
 import { swaggerSpec } from './middleware/swagger'
 import router from './middleware/router'
 import convertGlobPaths from './util/convertGlobPaths'
-import jwtVerify from './middleware/jsonwebtoken/verify'
 import { authorizeRequest } from './middleware/authorization'
 require('./middleware/logger')
 
 const privateKey = fs.readFileSync('sslcert/server.key', 'utf8')
 const certificate = fs.readFileSync('sslcert/server.crt', 'utf8')
 const credentials = { key: privateKey, cert: certificate }
+
+const jwtKey = fs.readFileSync('./middleware/jsonwebtoken/pem/jwt.key', 'utf8')
+const jwtCert = fs.readFileSync('./middleware/jsonwebtoken/pem/jwt.crt', 'utf8')
 
 const host = process.env.SERVER_HOST || 'localhost'
 const port = process.env.SERVER_port || '8443'
@@ -65,14 +67,13 @@ app.use(
 
 app.use(
   jwtSession({
-    client: redis.createClient({ host: 'redis' }),
-    // TODO: use ssl cert instead of secret string
-    secret: process.env.SESSION_SECRET,
+    client: redis.createClient({ host: process.env.REDIS_HOST }),
+    secret: jwtKey,
     keyspace: 'sess:',
     maxAge: 86400,
     algorithm: 'HS256',
-    requestKey: 'jwtSession',
-    requestArg: 'jwtToken'
+    requestKey: 'session',
+    requestArg: 'accessToken'
   })
 )
 

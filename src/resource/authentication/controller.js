@@ -1,6 +1,10 @@
 import bcrypt from 'bcryptjs-then'
 import { Auth } from '../../models/users'
 
+/**
+ * TODOS:
+ * - add better schema validation
+ */
 export const login = (req, res) => {
   if (!req.body.email || !req.body.password) return res.status(400).send({ error: true, data: { message: 'You must provide an email and password' } })
 
@@ -50,5 +54,19 @@ export const login = (req, res) => {
   .catch(err => {
     console.error(err)
     res.status(500).send({ error: true, data: { message: err.message } })
+  })
+}
+
+export const refresh = (req, res) => {
+  req.jwtSession.touch(err => {
+    if (err) console.error(`Session refresh err --> ${err}`)
+    res.status(200).send({ error: false, data: { message: req.jwtSession.toJSON() } })
+  })
+}
+
+export const logout = (req, res) => {
+  req.jwtSession.destroy(err => {
+    if (err) console.error(`Session destroy err --> ${err}`)
+    res.status(200).send({ error: false, data: { message: 'You\'ve successfully been logged out!' } })
   })
 }

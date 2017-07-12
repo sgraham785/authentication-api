@@ -3,7 +3,6 @@ const originWhitelist = [
 ]
 
 const origin = (origin, callback) => {
-  // console.log(origin)
   if (originWhitelist.includes(origin) || !origin) {
     callback(null, true)
   } else {
