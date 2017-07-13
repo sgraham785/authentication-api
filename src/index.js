@@ -7,7 +7,6 @@ import jwtSession from 'jwt-redis-session'
 import bodyParser from 'body-parser'
 import cors from 'cors'
 import helmet from 'helmet'
-import csurf from 'csurf'
 import logger from 'morgan'
 import https from 'https'
 import { } from 'dotenv'
@@ -16,7 +15,6 @@ import React from 'react'
 import VerificationEmail from './views/email/templates/verification'
 import { corsOptions } from './config/cors'
 import csp from './config/csp'
-import { csurfFunc } from './middleware/csurf'
 import { swaggerSpec } from './middleware/swagger'
 import router from './middleware/router'
 import convertGlobPaths from './util/convertGlobPaths'
@@ -75,19 +73,6 @@ app.use(
   })
 )
 
-// TODO: remove CSURF, no point if only JSON api
-// ======== *** CSURF MIDDLEWARE ***
-/*
-if (process.env.NODE_ENV !== 'development') {
-  app.use(csurf({ value: csurfFunc }))
-
-  app.use((req, res, next) => {
-    res.cookie('XSRF-TOKEN', req.csrfToken())
-    res.locals.csrftoken = req.csrfToken()
-    next()
-  })
-}
-*/
 // ======== *** SWAGGER JSDOC MIDDLEWARE ***
 if (process.env.NODE_ENV === 'development') {
   app.get('/api-docs.json', (req, res) => {
