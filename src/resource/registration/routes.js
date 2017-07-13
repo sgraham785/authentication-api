@@ -100,14 +100,14 @@ export const v1 = {
      *         required: true
      *         type: string
      *         schema:
-     *           $ref: '#/definitions/Email_Verification/properties/timestamp'
+     *           $ref: '#/definitions/VerifyEmail/properties/timestamp'
      *       - name: email_code
      *         description: Generated email code.
      *         in: path
      *         required: true
      *         type: string
      *         schema:
-     *           $ref: '#/definitions/Email_Verification/properties/email_code'
+     *           $ref: '#/definitions/VerifyEmail/properties/email_code'
      *     responses:
      *       200:
      *         description: Successful email verification
