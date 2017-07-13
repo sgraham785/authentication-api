@@ -64,7 +64,7 @@ app.use(bodyParser.json({ type: ['application/json'] }))
 app.use(
   jwtSession({
     client: redis.createClient({ host: process.env.REDIS_HOST }),
-    secret: 'writewhatyouwanthere', // process.env.SESSION_SECRET, // jwtKey,
+    secret: jwtKey,
     keyspace: 'sess:',
     maxAge: 86400,
     algorithm: 'HS256',
@@ -84,6 +84,7 @@ if (process.env.NODE_ENV === 'development') {
 // ======== *** EMAIL VIEW ROUTES ***
 if (process.env.NODE_ENV === 'development') {
   app.get('/email/verification', (req, res) => {
+    console.log(req.connection.getPeerCertificate())
     const html = Oy.renderTemplate(<VerificationEmail />, {
       title: 'This is an example',
       previewText: 'This is an example',
@@ -108,10 +109,10 @@ const checkCert = (cert) => {
   console.log(cert)
   // return cert.subject.CN === 'Doug Prishpreed'
 }
-app.use(clientCertificateAuth(checkCert))
+// app.use(clientCertificateAuth(checkCert))
 process.env.NODE_ENV === 'development'
   ? app.all('/*')
-  : app.all('/v*', authorizeRequest)
+  : app.all('/v*', clientCertificateAuth(checkCert))
 
 const routePaths = convertGlobPaths([path.resolve(__dirname, 'resource/**/routes.js')])
 

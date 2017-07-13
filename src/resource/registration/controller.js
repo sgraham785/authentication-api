@@ -2,6 +2,7 @@ import uuid from 'uuid'
 import Promise from 'bluebird'
 import Joi from 'joi'
 import bcrypt from 'bcryptjs-then'
+import randomString from '../../util/randomString'
 import { Auth, Info } from '../../models/users'
 import schema from './schema'
 import Mailer from '../../middleware/mailer'
@@ -26,7 +27,7 @@ export const registration = Promise.method((req, res) => {
     last_name: req.body.last_name,
     email: req.body.email,
     password: req.body.password,
-    email_code: Math.random().toString(36).slice(-16)
+    email_code: randomString(16)
   }
 
   validate(data, schema)
