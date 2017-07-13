@@ -3,7 +3,6 @@ import path from 'path'
 import express from 'express'
 import redis from 'redis'
 import favicon from 'serve-favicon'
-import cookieSession from 'express-session'
 import jwtSession from 'jwt-redis-session'
 import bodyParser from 'body-parser'
 import cors from 'cors'
@@ -29,8 +28,8 @@ const privateKey = fs.readFileSync('sslcert/server.key', 'utf8')
 const certificate = fs.readFileSync('sslcert/server.crt', 'utf8')
 const ssl = { key: privateKey, cert: certificate }
 
-const jwtKey = fs.readFileSync('./middleware/jsonwebtoken/pem/jwt.key', 'utf8')
-const jwtCert = fs.readFileSync('./middleware/jsonwebtoken/pem/jwt.crt', 'utf8')
+const jwtKey = fs.readFileSync(path.resolve(__dirname, './middleware/jsonwebtoken/pem/jwt.key'), 'utf8')
+// const jwtCert = fs.readFileSync('./middleware/jsonwebtoken/pem/jwt.crt', 'utf8')
 
 const host = process.env.SERVER_HOST || 'localhost'
 const port = process.env.SERVER_port || '8443'
@@ -65,20 +64,9 @@ app.use(bodyParser.json({ type: ['application/json'] }))
 
 // ======== *** SESSION MIDDLEWARE ***
 app.use(
-  cookieSession({
-    secret: process.env.SESSION_SECRET,
-    // store: ,
-    resave: false,
-    saveUninitialized: true,
-    expires: new Date(Date.now() + 3600000), // 1 Hour
-    cookie: { httpOnly: true, secure: true }
-  })
-)
-
-app.use(
   jwtSession({
     client: redis.createClient({ host: process.env.REDIS_HOST }),
-    secret: jwtKey,
+    secret: 'writewhatyouwanthere', // process.env.SESSION_SECRET, // jwtKey,
     keyspace: 'sess:',
     maxAge: 86400,
     algorithm: 'HS256',
@@ -89,6 +77,7 @@ app.use(
 
 // TODO: remove CSURF, no point if only JSON api
 // ======== *** CSURF MIDDLEWARE ***
+/*
 if (process.env.NODE_ENV !== 'development') {
   app.use(csurf({ value: csurfFunc }))
 
@@ -98,7 +87,7 @@ if (process.env.NODE_ENV !== 'development') {
     next()
   })
 }
-
+*/
 // ======== *** SWAGGER JSDOC MIDDLEWARE ***
 if (process.env.NODE_ENV === 'development') {
   app.get('/api-docs.json', (req, res) => {
@@ -115,10 +104,6 @@ if (process.env.NODE_ENV === 'development') {
       previewText: 'This is an example',
       bgColor: '#f7f7f7'
     })
-
-    res.set('Cache-Control', 'no-cache, no-store, must-revalidate')
-    res.set('Pragma', 'no-cache')
-    res.set('Expires', '0')
     res.send(html)
   })
 }
