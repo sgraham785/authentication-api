@@ -1,4 +1,5 @@
-FROM node:6.9.5
+FROM node:8.1
+RUN npm install -g yarn
 
 RUN mkdir -p /app/logs
 ADD .foreverignore /app
