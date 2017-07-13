@@ -7,9 +7,6 @@ else
   export IMAGE_NAME=${IMAGE}
 endif
 $(shell echo IMAGE_NAME=${IMAGE_NAME} > .env)
-# This works on Mac. Export the local IP address at build time
-$(shell echo HOST_IP="$(shell ipconfig getifaddr en0)" >> .env)
-
 
 help:
 	@echo
