@@ -15,13 +15,4 @@ export const authorizeRequest = (req, res, next) => {
   if (!token) {
     return res.status(401).send({ status: 401, message: 'Token not set.' })
   }
-
-  jwt.verify(token, (err, data) => {
-    if (err) {
-      return res.status(401).send({ status: 401, message: err })
-    }
-    req.user = data.claims.user
-    delete req.user.password
-    next()
-  })
 }

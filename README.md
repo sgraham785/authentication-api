@@ -1,33 +1,31 @@
-# Nodejs PostgreSQL API Server
+# Nodejs PostgreSQL Authentication API Server
 
-This is a boilerplate API server using Node.js and PostgreSQL.  It has a TODO example and user auth (which needs some work to finish up)
+This is an Authentication API server using Node.js and PostgreSQL for data storage. It uses Redis & JWT for session management.
 
 ## Requirements
-Node.js (duh) 6.5.x +
-
-PostrgreSQL 9.4+
-
-Nodemon
+Docker
 
 [![js-standard-style](https://cdn.rawgit.com/feross/standard/master/badge.svg)](https://github.com/feross/standard)
 
 ## Installation
 
-`npm -g install nodemon`
-
-`npm install`
-
-## Configuration
-
-Rename `.env.sample` to `.env` and add your configuration credentials
+`make build-dev`
 
 ## Usage
 
-Run database migrations & seeds:
+`make up-dev`
 
-`node source/middleware/database/migrate.js `
 
-[![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/f8493f5b75ab1b296b22)
+- Run database migrations & seeds:
+
+`npm run faker`
+
+`npm run migrate`
+
+`npm run seed`
+
+- Access Swagger-UI
+[http://localhost:8080](http://localhost:8080)
 
 ## Maintainers
 
@@ -47,20 +45,16 @@ in no particular order
 - [x] Public vs. Private(auth) routes
 - [x] Migrations & Seeds
 - [x] Add security best practices
-- [x] Use JSON API specification
-- [ ] ~~Implement password encryption~~
+- [x] Password encryption
 - [x] Use JWT for private route auth
 - [x] Create Postman collection
-- [x] Add mailer
+- [x] Verification emailer
 - [x] Use faker for seeding
 - [x] Utilize swagger documentation
-- [ ] Dockerize
-- [x] Implement SSL
-- [ ] Add health checks
+- [x] Dockerize
+- [x] SSL
+- [x] Health check
 - [ ] Add tests
-- [ ] Implement Yo Generator 
 
 ## Known Issues
-* Problem with related link in return https://github.com/endpoints/endpoints-example/issues/27
-
 * https://github.com/sgraham785/node-postgres-api-server/issues
