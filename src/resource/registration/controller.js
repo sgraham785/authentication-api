@@ -11,7 +11,7 @@ import Mailer from '../../middleware/mailer'
 let validate = Promise.promisify(Joi.validate)
 /**
  * TODOS:
- * - Delete inserted record or try again is Auth insert fails
+ * - Delete inserted record or try again if Auth insert fails
  */
 
 /**
@@ -20,7 +20,7 @@ let validate = Promise.promisify(Joi.validate)
  */
 export const registration = Promise.method((req, res) => {
   if (!req.body) return res.status(422).send({ error: true, data: { message: 'Missing request body' } })
-  // Build data object
+  // Build registration data object
   const data = {
     uuid: uuid.v4(),
     first_name: req.body.first_name,
