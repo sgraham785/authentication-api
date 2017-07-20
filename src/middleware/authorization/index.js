@@ -1,18 +1,20 @@
-// require an auth-token middleware
-export const authorizeRequest = (req, res, next) => {
-  let token
-  if (
-    req.headers.authorization &&
-    req.headers.authorization.split(' ')[0] === 'Bearer'
-  ) {
-    token = req.headers.authorization.split(' ')[1]
-  }
+import jwt from '../jwt'
 
-  if (req.body && req.body.token) {
-    token = req.body.token
+export default (req, res, next) => {
+  // Check that the client request is encrypted
+  if (!req.client.encrypted) {
+    return res.status(401)
+      .send({ error: true, message: 'Client sent plain text' })
   }
-
-  if (!token) {
-    return res.status(401).send({ status: 401, message: 'Token not set.' })
+  if (!req.headers.authorization && process.env.NODE_ENV === 'development') {
+    req.headers.authorization = `Bearer ${jwt.sign()}`
+  }
+  if (req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Bearer') {
+    let token = req.headers.authorization.split(' ')[1]
+    jwt.verify(token)
+    next()
+  } else {
+    return res.status(401)
+      .send({ error: true, message: 'Authorization failed' })
   }
 }

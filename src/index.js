@@ -18,16 +18,21 @@ import csp from './config/csp'
 import { swaggerSpec } from './middleware/swagger'
 import router from './middleware/router'
 import convertGlobPaths from './util/convertGlobPaths'
-import { authorizeRequest } from './middleware/authorization'
-import clientCertificateAuth from 'client-certificate-auth-v2'
+import authorizeRequest from './middleware/authorization'
 require('./middleware/logger')
 
-const privateKey = fs.readFileSync('sslcert/server.key', 'utf8')
-const certificate = fs.readFileSync('sslcert/server.crt', 'utf8')
-const ssl = { key: privateKey, cert: certificate }
+const key = fs.readFileSync('sslcert/server.key', 'utf8')
+const cert = fs.readFileSync('sslcert/server.crt', 'utf8')
+const ca = fs.readFileSync('sslcert/server.csr', 'utf8')
+const ssl = {
+  key,
+  cert,
+  ca,
+  requestCert: true,
+  rejectUnauthorized: false
+}
 
-const jwtKey = fs.readFileSync(path.resolve(__dirname, './middleware/jsonwebtoken/pem/jwt.key'), 'utf8')
-// const jwtCert = fs.readFileSync('./middleware/jsonwebtoken/pem/jwt.crt', 'utf8')
+const jwtKey = fs.readFileSync(path.resolve(__dirname, './middleware/jwt/pem/jwt.key'), 'utf8')
 
 const host = process.env.SERVER_HOST || 'localhost'
 const port = process.env.SERVER_port || '8443'
@@ -35,9 +40,7 @@ const env = process.env.NODE_ENV || 'development'
 
 /**
  * TODOs:
- * - Validate request is from https
- * - Validate authorized request
- * - Fix logging
+ * - Make logging better
  */
 
 export let app = express()
@@ -73,16 +76,23 @@ app.use(
   })
 )
 
-// ======== *** SWAGGER JSDOC MIDDLEWARE ***
+// ======== *** SECURE ALL VERSIONED ROUTES ***
+app.all('/v*', authorizeRequest)
+
+// ======== *** SETUP RESOURCE ROUTES ***
+const routePaths = convertGlobPaths([path.resolve(__dirname, 'resource/**/routes.js')])
+
+router(app, routePaths)
+
+// ======== *** DEVELOPMENT ONLY ROUTES ***
 if (process.env.NODE_ENV === 'development') {
+  // Swagger API docs
   app.get('/api-docs.json', (req, res) => {
     res.setHeader('Content-Type', 'application/json')
     res.send(swaggerSpec)
   })
-}
 
-// ======== *** EMAIL VIEW ROUTES ***
-if (process.env.NODE_ENV === 'development') {
+  // Email template
   app.get('/email/verification', (req, res) => {
     console.log(req.connection.getPeerCertificate())
     const html = Oy.renderTemplate(<VerificationEmail />, {
@@ -93,30 +103,6 @@ if (process.env.NODE_ENV === 'development') {
     res.send(html)
   })
 }
-
-// ======== *** SETUP RESOURCE ROUTING ***
-const checkCert = (cert) => {
-  /*
-   * allow access if certificate subject Common Name is 'Doug Prishpreed'.
-   * this is one of many ways you can authorize only certain authenticated
-   * certificate-holders; you might instead choose to check the certificate
-   * fingerprint, or apply some sort of role-based security based on e.g. the OU
-   * field of the certificate. You can also link into another layer of
-   * auth or session middleware here; for instance, you might pass the subject CN
-   * as a username to log the user in to your underlying authentication/session
-   * management layer.
-   */
-  console.log(cert)
-  // return cert.subject.CN === 'Doug Prishpreed'
-}
-// app.use(clientCertificateAuth(checkCert))
-process.env.NODE_ENV === 'development'
-  ? app.all('/*')
-  : app.all('/v*', clientCertificateAuth(checkCert))
-
-const routePaths = convertGlobPaths([path.resolve(__dirname, 'resource/**/routes.js')])
-
-router(app, routePaths)
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
