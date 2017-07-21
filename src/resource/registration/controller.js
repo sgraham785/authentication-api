@@ -73,7 +73,7 @@ export const registration = Promise.method((req, res) => {
             last_name: data.last_name
           }
           // this will be stored in redis
-          req.jwtSession.profile = profile
+          req.session.profile = profile
 
           // this will be attached to the JWT
           let claims = {
@@ -81,7 +81,7 @@ export const registration = Promise.method((req, res) => {
             aud: process.env.SERVER_HOST
           }
 
-          req.jwtSession.create(claims, (err, token) => {
+          req.session.create(claims, (err, token) => {
             if (err) console.error(`Set Token err --> ${err}`)
             res.status(200).send({ error: false, data: { token: token } })
           })
