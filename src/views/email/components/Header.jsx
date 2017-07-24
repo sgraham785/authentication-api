@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import {Table, TBody, TD, TR} from 'oy-vey'
 
-import EmptySpace from './EmptySpace.jsx'
+import EmptySpace from './EmptySpace'
 
 const Header = (props) => {
   const style = {

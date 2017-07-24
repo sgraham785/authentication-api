@@ -40,7 +40,7 @@ export const registration = Promise.method((req, res) => {
         return data
       })
     }, err => {
-      console.error(`Registration Validation err--> ${JSON.stringify(err)}`)
+      console.error(`Registration Schema Validation err--> ${JSON.stringify(err)}`)
       return res.status(422)
         .send({ error: true, data: { message: 'Please fill in all required fields' } })
     })
@@ -93,6 +93,7 @@ export const registration = Promise.method((req, res) => {
           // TODO: should delete inserted Auth record is error on Info insert, beware of email unique though, don't want to delete existing user
         })
         .then(() => {
+          // TODO: move this to it's own api
           let timestamp = Math.round(Date.now() / 1000)
           // TODO: set this to a webpage
           let link = `https://${req.get('host')}/v1/registration/verify/${timestamp}/${data.email_code}`
@@ -124,6 +125,7 @@ export const registration = Promise.method((req, res) => {
 /**
  * TODOS:
  * - maybe send a welcome email
+ * - move to "verification" namespace
  */
 
 /**

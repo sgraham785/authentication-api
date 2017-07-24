@@ -1,7 +1,7 @@
 import React from 'react'
 import {Table, TBody, TR, TD} from 'oy-vey'
 
-import EmptySpace from './EmptySpace.jsx'
+import EmptySpace from './EmptySpace'
 
 export default (props) => {
   const textStyle = {

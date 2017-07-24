@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import {Table, TBody, TR, TD, A} from 'oy-vey'
 
-import EmptySpace from './EmptySpace.jsx'
+import EmptySpace from './EmptySpace'
 
 const Footer = (props) => {
   const style = {

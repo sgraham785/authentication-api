@@ -18,14 +18,15 @@
   "license": "MIT",
   "scripts": {
     "start": "node ./bin/www",
-    "build": "babel ./src -d ./dist",
+    "build": "babel ./src -d ./dist --copy-files",
     "prebuild": "rm -rf dist/*",
     "dev": "node ./bin/www",
     "faker": "babel-node database/faker",
     "migrate": "flyway -X -configFile=database/migrate.conf migrate",
     "seed": "flyway -X -configFile=database/seed.conf migrate",
-    "test": "npm run lint && mocha --reporter spec --bail --check-leaks --compilers js:babel-core/register ./test/**/*.js && standard",
-    "lint": "jshint src",
+    "test": "NODE_ENV=development && ava ./src/resource/registration/test.js --verbose",
+    "test:watch": "ava tests/*.js --verbose --watch",
+    "ava": "ava --verbose",
     "nsp": "nsp check",
     "cleancode": "prettier --no-semi --single-quote --write 'src/**/*.js' && standard --fix",
     "rmrf-npmi": "rm -rf node_modules && npm i"
@@ -50,6 +51,7 @@
     "knex": "^0.12.0",
     "lodash": "^4.17.4",
     "morgan": "^1.8.2",
+    "node-fetch": "^1.7.1",
     "nodemailer": "^4.0.1",
     "oy-vey": "^0.9.0",
     "passport": "~0.3.2",
@@ -66,7 +68,11 @@
     "uuid": "^3.1.0"
   },
   "devDependencies": {
+    "@ava/babel-preset-stage-4": "^1.1.0",
+    "@ava/babel-preset-transform-test-files": "^3.0.0",
+    "ava": "^0.21.0",
     "babel-cli": "^6.24.1",
+    "babel-polyfill": "^6.23.0",
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-react": "^6.24.1",
     "babel-preset-stage-2": "^6.24.1",
@@ -85,8 +91,17 @@
     "presets": [
       "es2015",
       "stage-2",
-      "react"
+      "react",
+      "@ava/stage-4",
+      "@ava/transform-test-files"
     ],
     "plugins": []
+  },
+  "ava": {
+    "require": [
+      "babel-register",
+      "babel-polyfill"
+    ],
+    "babel": "inherit"
   }
 }
