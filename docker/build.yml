@@ -2,6 +2,6 @@ build:
   image: nodesource/centos7:latest
   environment:
     - NODE_ENV=development
-  working_dir: /build
+  working_dir: /app
   volumes:
-    - ..:/build
+    - ..:/app

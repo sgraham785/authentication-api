@@ -27,6 +27,10 @@ Docker
 - Access Swagger-UI
 [http://localhost:8080](http://localhost:8080)
 
+## Tests
+
+`make test`
+
 ## Maintainers
 
 [sgraham785](https://github.com/sgraham785)

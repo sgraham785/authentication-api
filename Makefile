@@ -33,7 +33,7 @@ clean:
 npm-install:
 	npm install
 	npm run build
-	npm prune --production
+	# npm prune --production
 build:	clean
 	@echo "Compiling source..."
 	sudo docker-compose -f docker/build.yml run --rm build make npm-install
@@ -46,13 +46,13 @@ build-deps:
 build-dev:	build build-deps
 	sudo docker-compose -f docker/dev.yml up -d app
 up-dev:	down
-	sudo docker-compose -f docker/dev.yml up -d --remove-orphans
+	sudo docker-compose -f docker/dev.yml up -d
 up:	down
-	sudo docker-compose -f docker/up.yml up -d --remove-orphans
+	sudo docker-compose -f docker/up.yml up -d 
 down:
-	sudo docker-compose -f docker/dev.yml down
+	sudo docker-compose -f docker/dev.yml down --remove-orphans
 test:	down
-	sudo docker-compose -f docker/test.yml run --rm app npm test
-	sudo docker-compose -f docker/test.yml down
+	sudo docker-compose -f docker/test.yml run --rm test-app
+	sudo docker-compose -f docker/test.yml down --remove-orphans
 
 .PHONY: test

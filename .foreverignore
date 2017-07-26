@@ -1,4 +1,5 @@
 database
+dist
 docker
 logs
 node_modules
