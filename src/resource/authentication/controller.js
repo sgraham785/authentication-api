@@ -10,7 +10,7 @@ let validate = Promise.promisify(Joi.validate)
  * TODOS:
  */
 export const login = Promise.method((req, res) => {
-  if (!req.body.email || !req.body.password) return res.status(400).send({ error: true, data: { message: 'You must provide an email and password' } })
+  if (!req.body.email || !req.body.password) return res.status(422).send({ error: true, data: { message: 'You must provide an email and password' } })
 
   const data = Object.freeze({
     email: req.body.email.toLowerCase().trim(),

@@ -1,16 +1,7 @@
 test-app:
   image: $IMAGE_NAME
   volumes:
-    - ../bin:/app/bin
-    - ../database:/app/database
-    - ../scripts:/app/scripts
-    - ../node_modules:/app/node_modules
-    - ../public:/app/public
-    - ../src:/app/src
-    - ../sslcert:/app/sslcert
-    - ../test:/app/test
-    - ../.env.development:/app/.env.development
-    - ../package.json:/app/package.json
+    - ../:/app
   env_file: ../.env.test
   command: bash -c "chmod +x /app/scripts/wait-for-it.sh && npm test"
   links:
@@ -24,7 +15,7 @@ test-api:
   volumes:
     - ../:/app
   env_file: ../.env.test
-  command: npm run dev
+  command: npm start
   links:
     - test-postgres
     - test-redis

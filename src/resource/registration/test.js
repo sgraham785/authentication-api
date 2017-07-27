@@ -1,18 +1,6 @@
 import test from 'ava'
-// import app from '../../index'
-import { truncate } from '../../../test/helpers/truncateTables'
 import { post } from '../../../test/helpers/methodHelper'
 import { newUser, existingUser } from '../../../test/fixtures/registration'
-
-// test.before(async t => {
-//   return require('../../index')
-// })
-test.after.always('db cleanup', async t => {
-  t.plan(1)
-  return truncate(['users.auth']).then(() => {
-    t.pass()
-  })
-})
 
 test('Success: POST [new user] /v1/registration', async t => {
   t.plan(3)

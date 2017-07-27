@@ -6,7 +6,7 @@ ifdef GIT_COMMIT
 else
   export IMAGE_NAME=${IMAGE}
 endif
-$(shell echo IMAGE_NAME=${IMAGE_NAME} > .env)
+# $(shell echo IMAGE_NAME=${IMAGE_NAME} > .env)
 
 help:
 	@echo

@@ -83,7 +83,7 @@ export const registration = Promise.method((req, res) => {
 
           req.session.create(claims, (err, token) => {
             if (err) console.error(`Set Token err --> ${err}`)
-            res.status(200).send({ error: false, data: { token: token } })
+            return res.status(200).send({ error: false, data: { token: token } })
           })
         }, err => {
           // This will block verification email from going on SQL insert error
